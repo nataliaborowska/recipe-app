@@ -1,0 +1,46 @@
+.recipeWrapper {
+  background-color: white;
+  padding: 20px;
+}
+
+.recipeStats {
+  padding-top: 20px;
+}
+
+.recipeRating {
+  display: block;
+  padding-bottom: 20px;
+}
+
+.ingredientsListItem {
+  padding-bottom: 5px;
+}
+
+.recipeData {
+  text-align: center;
+  position: relative;
+
+  &:last-of-type {
+    &:after {
+      content: none;
+    }
+  }
+
+  &:after {
+    content: '';
+    display: block;
+    background-color: gray;
+    height: 40px;
+    width: 1px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    bottom: 0;
+    transform: translateY(-50%);
+  }
+}
+
+.recipeImage {
+  width: 100%;
+  height: auto;
+}

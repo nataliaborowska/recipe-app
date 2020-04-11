@@ -1,13 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import {BrowserRouter} from 'react-router-dom';
+import {Provider} from 'react-redux';
+
 import App from './App';
+import store from './store/store';
 import * as serviceWorker from './serviceWorker';
+import Firebase, {FirebaseContext} from './components/Firebase';
+
+import 'antd/dist/antd.css';
+import './index.css';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <FirebaseContext.Provider value={new Firebase()}>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
+  </FirebaseContext.Provider>,
   document.getElementById('root')
 );
 
