@@ -1,32 +1,37 @@
 import React from 'react';
-import {Button, Form, Typography} from 'antd';
+import {Button, Form, Input, Typography} from 'antd';
+
+import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
+import {SignUpForm} from './SignUpForm';
 
 import modules from './SignUp.module.scss';
 
-export const SignUp: React.FC = () => {
-  const onFormSubmit = () => {
+export class SignUp extends React.Component {
+  state = {
+    username: '',
+    email: '',
+    password: '',
+    signUpError: false,
+  }
+
+  onFormSubmit = (values: any) => {
+    console.warn(values);
+  }
+
+  onFormSubmitFailed = () => {
 
   }
 
-  const onFormSubmitFailed = () => {
+  render() {
+    return (
+      <div className={modules.signUp}>
+        <Typography>Sign Up</Typography>
 
+        <SignUpForm
+          onFormSubmit={this.onFormSubmit}
+          onFormSubmitFailed={this.onFormSubmitFailed}
+        />
+      </div>
+    );
   }
-
-  return (
-    <div className={modules.signUp}>
-      <Typography>Sign Up</Typography>
-
-      <Form
-        name="sign-up"
-        onFinish={onFormSubmit}
-        onFinishFailed={onFormSubmitFailed}
-      >
-        <Form.Item>
-
-        </Form.Item>
-        <Form.Item></Form.Item>
-        <Form.Item></Form.Item>
-      </Form>
-    </div>
-  );
 }
