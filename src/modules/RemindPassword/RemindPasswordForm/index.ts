@@ -1,0 +1,1 @@
+export {RemindPasswordForm} from './RemindPasswordForm';

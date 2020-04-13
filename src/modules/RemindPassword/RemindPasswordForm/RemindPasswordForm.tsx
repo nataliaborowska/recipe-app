@@ -8,7 +8,7 @@ interface IPropTypes {
   isFormValid: boolean;
 }
 
-export const SignUpForm: React.FC<IPropTypes> = (props) => {
+export const RemindPasswordForm: React.FC<IPropTypes> = (props) => {
   const layout = {
     labelCol: {
       span: 8,
@@ -28,7 +28,7 @@ export const SignUpForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
-      name="sign-up"
+      name="remind-password"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}
@@ -48,58 +48,13 @@ export const SignUpForm: React.FC<IPropTypes> = (props) => {
         <Input />
       </Form.Item>
 
-      <Form.Item
-        label="Username"
-        name="userName"
-        rules={[{required: true}]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[
-          {
-            required: true,
-          },
-          {
-            min: 6,
-          }
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        dependencies={['password']}
-        label="Confirm password"
-        name="confirm"
-        rules={[
-          {required: true},
-          ({getFieldValue}) => ({
-            validator(rule, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-
-              return Promise.reject('The two passwords that you entered do not match!');
-            },
-          }),
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
       <Form.Item {...tailLayout}>
         <Button
           disabled={!props.isFormValid}
           type="primary"
           htmlType="submit"
         >
-          Submit
+          Reset My Password
       </Button>
       </Form.Item>
     </Form>

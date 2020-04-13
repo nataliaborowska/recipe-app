@@ -3,16 +3,16 @@ import {connect} from 'react-redux';
 import {Typography} from 'antd';
 
 import {ErrorModal} from '../../common/ErrorModal';
-import {RemindPasswordForm} from './RemindPasswordForm';
+import {ChangePasswordForm} from './ChangePasswordForm';
 import {withFirebase} from '../../components/Firebase';
-import {remindPassword} from '../../store/actions/auth';
+import {changePassword} from '../../store/actions/auth';
 
-import modules from './RemindPassword.module.scss';
+import modules from './ChangePassword.module.scss';
 
 interface IPropTypes {
   authenticationError?: string;
   firebase: any;
-  remindPassword: (email: string, firebase: any) => any;
+  changePassword: (passwordCurrent: string, passwordNew: string, firebase: any) => any;
 }
 
 interface IState {
@@ -21,7 +21,7 @@ interface IState {
   remindPasswordError: boolean;
 }
 
-class RemindPassword extends React.Component<IPropTypes, IState> {
+class ChangePassword extends React.Component<IPropTypes, IState> {
   state = {
     isErrorModalVisible: false,
     isFormValid: false,
@@ -55,7 +55,8 @@ class RemindPassword extends React.Component<IPropTypes, IState> {
   }
 
   handleFormSubmit = (values: any) => {
-    this.props.remindPassword(values.email, this.props.firebase);
+    console.warn(values);
+    this.props.changePassword(values.passwordCurrent, values.passwordNew, this.props.firebase);
   }
 
   handleFormSubmitFailed = () => {
@@ -67,7 +68,7 @@ class RemindPassword extends React.Component<IPropTypes, IState> {
       <div className={modules.remindPassword}>
         <Typography>Remind password</Typography>
 
-        <RemindPasswordForm
+        <ChangePasswordForm
           isFormValid={this.state.isFormValid}
           onFormFieldsChange={this.handleFormFieldsChanged}
           onFormSubmit={this.handleFormSubmit}
@@ -76,10 +77,10 @@ class RemindPassword extends React.Component<IPropTypes, IState> {
 
         {this.props.authenticationError &&
           <ErrorModal
-            errorMessage={this.props.authenticationError}
             isVisible={this.state.isErrorModalVisible}
+            errorMessage={this.props.authenticationError}
             onCloseErrorModal={this.handleCloseErrorModal}
-            modalTitle="Remind password fail"
+            modalTitle="Change password fail"
           />
         }
       </div>
@@ -93,7 +94,7 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-const WrappedComponent = connect(mapStateToProps, {remindPassword})(withFirebase(RemindPassword));
+const WrappedComponent = connect(mapStateToProps, {changePassword})(withFirebase(ChangePassword));
 
-export {WrappedComponent as RemindPassword};
+export {WrappedComponent as ChangePassword};
 

@@ -8,7 +8,7 @@ interface IPropTypes {
   isFormValid: boolean;
 }
 
-export const SignUpForm: React.FC<IPropTypes> = (props) => {
+export const SignInForm: React.FC<IPropTypes> = (props) => {
   const layout = {
     labelCol: {
       span: 8,
@@ -28,7 +28,7 @@ export const SignUpForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
-      name="sign-up"
+      name="sign-in"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}
@@ -49,45 +49,9 @@ export const SignUpForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
-        label="Username"
-        name="userName"
-        rules={[{required: true}]}
-      >
-        <Input />
-      </Form.Item>
-
-      <Form.Item
         label="Password"
         name="password"
-        rules={[
-          {
-            required: true,
-          },
-          {
-            min: 6,
-          }
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        dependencies={['password']}
-        label="Confirm password"
-        name="confirm"
-        rules={[
-          {required: true},
-          ({getFieldValue}) => ({
-            validator(rule, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-
-              return Promise.reject('The two passwords that you entered do not match!');
-            },
-          }),
-        ]}
+        rules={[{required: true}]}
         hasFeedback
       >
         <Input.Password />
@@ -99,7 +63,7 @@ export const SignUpForm: React.FC<IPropTypes> = (props) => {
           type="primary"
           htmlType="submit"
         >
-          Submit
+          Sign In
       </Button>
       </Form.Item>
     </Form>

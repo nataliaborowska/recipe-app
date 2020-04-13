@@ -5,13 +5,14 @@ import {UserOutlined} from '@ant-design/icons';
 import {connect} from 'react-redux';
 
 import Logo from './logo.svg';
-import {signIn, SignInAction, signOut, SignOutAction} from '../../store/actions/auth';
+import {signOut} from '../../store/actions/auth';
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
+import {SignOutButton} from './SignOutButton';
+
 import modules from './Header.module.scss';
 
 interface IPropTypes {
-  signIn: () => SignInAction;
-  signOut: () => SignOutAction;
+  signOut: (firebase: any) => any;
   isAuthenticated: boolean;
 }
 
@@ -27,15 +28,9 @@ class Header extends React.Component<IPropTypes> {
 
         <Menu.Item key="2"><Link to={AppRoutesEnum.ADMIN}>Admin</Link></Menu.Item>
 
-        <Menu.Item key="3"><Link to={AppRoutesEnum.REMIND_PASSWORD}>Forgot Password</Link></Menu.Item>
+        <Menu.Item key="3"><Link to={AppRoutesEnum.ACCOUNT}>Account</Link></Menu.Item>
 
-        <Menu.Item key="4"><Link to={AppRoutesEnum.SIGN_IN}></Link>Sign In</Menu.Item>
-
-        <Menu.Item key="5"><Link to={AppRoutesEnum.SIGN_UP}>Sign Up</Link></Menu.Item>
-
-        <Menu.Item key="6"><Link to={AppRoutesEnum.ACCOUNT}>Account</Link></Menu.Item>
-
-        <Menu.Item key="7"><Button onClick={this.props.signOut}>SIGN OUT</Button></Menu.Item>
+        <Menu.Item key="4"><SignOutButton signOut={this.props.signOut} /></Menu.Item>
       </Menu>
     );
   }
@@ -58,7 +53,7 @@ class Header extends React.Component<IPropTypes> {
             />
           </Dropdown>
           :
-          <Button onClick={this.props.signIn}>SIGN IN</Button>
+          <Link to={AppRoutesEnum.SIGN_IN}>SIGN IN</Link>
         }
       </div>
     );
@@ -71,15 +66,6 @@ const mapStateToProps = (state: any) => {
   }
 };
 
-// const mapDispatchToProps = (dispatch: any) => {
-//   return {
-//     logIn: () => dispatch(
-
-//),
-//     logout: () => dispatch(logOut),
-//   }
-// }
-
-const WrappedComponent = connect(mapStateToProps, {signIn, signOut})(Header);
+const WrappedComponent = connect(mapStateToProps, {signOut})(Header);
 
 export {WrappedComponent as Header}
