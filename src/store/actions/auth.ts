@@ -4,11 +4,13 @@ import {ActionTypesEnum} from './typesEnum';
 
 import {
   ChangePasswordAction,
+  ChangePasswordEndAction,
   ChangePasswordFailAction,
   ChangePasswordStartAction,
   ChangePasswordSuccessAction,
-  PasswordRemindFailAction,
-  PasswordRemindSuccessAction,
+  ResetPasswordEndAction,
+  ResetPasswordFailAction,
+  ResetPasswordSuccessAction,
   SignInAction,
   SignInStartAction,
   SignInSuccessAction,
@@ -24,7 +26,7 @@ import {
 
 //action creators
 
-export const changePassword = (passwordCurrent: string, passwordNew: string, firebase: any) => {
+export const changePassword = (passwordNew: string, firebase: any) => {
   return async (dispatch: Dispatch) => {
     dispatch<ChangePasswordStartAction>(changePasswordStart())
     try {
@@ -43,10 +45,16 @@ export const changePasswordStart = (): ChangePasswordStartAction => {
   }
 }
 
+export const changePasswordEnd = (): ChangePasswordEndAction => {
+  return {
+    type: ActionTypesEnum.ChangePasswordEnd,
+  }
+}
+
 export const changePasswordFail = (error: string): ChangePasswordFailAction => {
   return {
     type: ActionTypesEnum.ChangePasswordFail,
-    changePasswordError: error,
+    authError: error,
   }
 }
 
@@ -56,30 +64,36 @@ export const changePasswordSuccess = (): ChangePasswordSuccessAction => {
   }
 }
 
-export const remindPassword = (email: string, firebase: any) => {
+export const resetPassword = (email: string, firebase: any) => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase.passwordReset(email);
 
-      dispatch<PasswordRemindSuccessAction>(passwordRemindSuccess());
+      dispatch<ResetPasswordSuccessAction>(resetPasswordSuccess());
 
     } catch (error) {
-      dispatch<PasswordRemindFailAction>(passwordRemindFail(error.message));
+      dispatch<ResetPasswordFailAction>(resetPasswordFail(error.message));
     }
   }
 }
 
-export const passwordRemindSuccess = (): PasswordRemindSuccessAction => {
+export const resetPasswordSuccess = (): ResetPasswordSuccessAction => {
   return {
-    type: ActionTypesEnum.PasswordRemindSuccess,
-    passwordRemindLinkSent: true,
+    type: ActionTypesEnum.ResetPasswordSuccess,
   }
 }
 
-export const passwordRemindFail = (error: string): PasswordRemindFailAction => {
+
+export const resetPasswordEnd = (): ResetPasswordEndAction => {
   return {
-    type: ActionTypesEnum.PasswordRemindFail,
-    passwordRemindError: error,
+    type: ActionTypesEnum.ResetPasswordEnd,
+  }
+}
+
+export const resetPasswordFail = (error: string): ResetPasswordFailAction => {
+  return {
+    type: ActionTypesEnum.ResetPasswordFail,
+    authError: error,
   }
 }
 
@@ -113,7 +127,7 @@ export const signInSuccess = (authenticatedUser: any): SignInSuccessAction => {
 export const signInFail = (error: string): SignInFailAction => {
   return {
     type: ActionTypesEnum.SignInFail,
-    signInError: error,
+    authError: error,
   }
 }
 
@@ -143,12 +157,37 @@ export const signOutSuccess = (): SignOutSuccessAction => {
   }
 }
 
-export const signUp = (email: string, password: string, firebase: any) => {
+export const signUp = (email: string, password: string, username: string, firebase: any) => {
   return async (dispatch: Dispatch) => {
     dispatch<SignUpStartAction>(signUpStart());
 
     try {
       const authenticatedUser = await firebase.createUserWithEmailAndPassword(email, password);
+
+      dispatch<any>(saveUserToDatabase(email, username, authenticatedUser, firebase))
+      //dispatch<SignUpSuccessAction>(signUpSuccess(authenticatedUser));
+    } catch (error) {
+      dispatch<SignUpFailAction>(signUpFail(error.message));
+    } finally {
+      // if (authenticatedUser) {
+      //   try {
+      //     await firebase
+      //       .user(authenticatedUser.user.uid)
+      //       .set({email, username})
+      //   } catch (error) {
+      //     dispatch<SignUpFailAction>(signUpFail(error.message));
+      //   }
+      // }
+    }
+  }
+}
+
+export const saveUserToDatabase = (email: string, username: string, authenticatedUser: any, firebase: any) => {
+  return async (dispatch: Dispatch) => {
+    try {
+      await firebase
+        .user(authenticatedUser.user.uid)
+        .set({email, username});
 
       dispatch<SignUpSuccessAction>(signUpSuccess(authenticatedUser));
     } catch (error) {
@@ -173,7 +212,7 @@ export const signUpSuccess = (authenticatedUser: any): SignUpSuccessAction => {
 export const signUpFail = (error: string): SignUpFailAction => {
   return {
     type: ActionTypesEnum.SignUpFail,
-    signUpError: error,
+    authError: error,
   }
 }
 

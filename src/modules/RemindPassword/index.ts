@@ -1,1 +1,0 @@
-export {RemindPassword} from './RemindPassword';

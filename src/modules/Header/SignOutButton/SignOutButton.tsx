@@ -5,6 +5,7 @@ import {withFirebase} from '../../../components/Firebase';
 
 interface IPropTypes {
   firebase: any;
+  isAuthenticated: boolean;
   signOut: (frebase: any) => any;
 }
 
@@ -13,9 +14,7 @@ const SignOutButton: React.FC<IPropTypes> = (props) => {
     props.signOut(props.firebase);
   }
 
-  return (
-    <Button onClick={signOut}>SIGN OUT</Button>
-  );
+  return <Button onClick={signOut}>SIGN OUT</Button>
 }
 
 const WrappedComponent = withFirebase(SignOutButton);

@@ -50,7 +50,7 @@ export const SignUpForm: React.FC<IPropTypes> = (props) => {
 
       <Form.Item
         label="Username"
-        name="userName"
+        name="username"
         rules={[{required: true}]}
       >
         <Input />

@@ -87,15 +87,15 @@ class SignIn extends React.Component<IPropTypes, IState> {
           />
         }
 
-        <p><Link to={AppRoutesEnum.REMIND_PASSWORD}>Forgot Password?</Link></p>
+        <p><Link to={AppRoutesEnum.RESET_PASSWORD}>Forgot Password?</Link></p>
 
         <p>Or <Link to={AppRoutesEnum.SIGN_UP}>Sign Up</Link> if you don't have an account yet.</p>
 
         {this.props.authenticationError &&
           <ErrorModal
             isVisible={this.state.isErrorModalVisible}
-            errorMessage={this.props.authenticationError}
-            onCloseErrorModal={this.handleCloseErrorModal}
+            message={this.props.authenticationError}
+            onCloseModal={this.handleCloseErrorModal}
             modalTitle="Sign in error"
           />
         }

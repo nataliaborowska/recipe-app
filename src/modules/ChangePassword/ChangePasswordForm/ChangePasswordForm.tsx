@@ -34,17 +34,31 @@ export const ChangePasswordForm: React.FC<IPropTypes> = (props) => {
       onFieldsChange={props.onFormFieldsChange}
     >
       <Form.Item
-        label="Current password"
-        name="passwordCurrent"
+        label="New password"
+        name="passwordNew"
         rules={[{required: true}]}
+        hasFeedback
       >
         <Input.Password />
       </Form.Item>
 
       <Form.Item
-        label="New password"
-        name="passwordNew"
-        rules={[{required: true}]}
+        dependencies={['passwordNew']}
+        label="Confirm new password"
+        name="confirm"
+        rules={[
+          {required: true},
+          ({getFieldValue}) => ({
+            validator(rule, value) {
+              if (!value || getFieldValue('passwordNew') === value) {
+                return Promise.resolve();
+              }
+
+              return Promise.reject('The two passwords that you entered do not match!');
+            },
+          }),
+        ]}
+        hasFeedback
       >
         <Input.Password />
       </Form.Item>

@@ -2,9 +2,11 @@ import React from 'react';
 import {useParams} from 'react-router-dom';
 import {Col, Divider, Rate, Row, Statistic, Typography} from 'antd';
 
+import {withAuthorization} from '../../common/withAuthorization';
+
 import styles from './Recipe.module.scss';
 
-export const Recipe: React.FC = () => {
+const Recipe: React.FC = () => {
   const {recipeId} = useParams();
   const recipe = {
     description: 'Mauris quis tempor metus. Sed in magna purus. Suspendisse non nibh nec arcu semper venenatis eget sed erat. Fusce vitae rutrum arcu. Integer sed ipsum in diam scelerisque ultrices. Sed mollis consectetur tellus id consequat. Fusce scelerisque massa vel turpis sollicitudin, a ullamcorper urna tempor. Maecenas sit amet commodo ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam fringilla lacus vel lectus consequat, et tincidunt est rutrum. Donec non mi leo.',
@@ -99,3 +101,7 @@ export const Recipe: React.FC = () => {
     </div>
   );
 }
+
+const WrappedComponent = withAuthorization(Recipe);
+
+export {WrappedComponent as Recipe};

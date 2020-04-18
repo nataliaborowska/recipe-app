@@ -8,7 +8,7 @@ interface IPropTypes {
   isFormValid: boolean;
 }
 
-export const RemindPasswordForm: React.FC<IPropTypes> = (props) => {
+export const ResetPasswordForm: React.FC<IPropTypes> = (props) => {
   const layout = {
     labelCol: {
       span: 8,
@@ -28,7 +28,7 @@ export const RemindPasswordForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
-      name="remind-password"
+      name="reset-password"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}

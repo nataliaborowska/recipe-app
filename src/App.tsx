@@ -10,7 +10,7 @@ import {Header} from './modules/Header';
 import {LandingPage} from './modules/LandingPage';
 import {Recipe} from './modules/Recipe';
 import {RecipesList} from './modules/RecipesList';
-import {RemindPassword} from './modules/RemindPassword';
+import {ResetPassword} from './modules/ResetPassword';
 import {SignIn} from './modules/SignIn';
 import {SignUp} from './modules/SignUp';
 
@@ -28,10 +28,10 @@ function App() {
             <Route exact component={Recipe} path={AppRoutesEnum.RECIPE} />
             <Route exact component={Admin} path={AppRoutesEnum.ADMIN} />
             <Route exact component={ChangePassword} path={AppRoutesEnum.CHANGE_PASSWORD} />
-            <Route exact component={RemindPassword} path={AppRoutesEnum.REMIND_PASSWORD} />
+            <Route exact component={ResetPassword} path={AppRoutesEnum.RESET_PASSWORD} />
             <Route exact component={SignIn} path={AppRoutesEnum.SIGN_IN} />
             <Route exact component={SignUp} path={AppRoutesEnum.SIGN_UP} />
-            <Route exact component={Account} path={AppRoutesEnum.ACCOUNT} />
+            <Route exact component={Account} path={`${AppRoutesEnum.ACCOUNT}/:userId`} />
           </Switch>
         </Layout.Content>
         <Layout.Footer>made by Natalia Borowska</Layout.Footer>

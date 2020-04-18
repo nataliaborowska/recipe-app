@@ -1,44 +1,42 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Typography} from 'antd';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Typography} from 'antd';
 
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
 import {SuccessModal} from '../../common/SuccessModal';
-import {ChangePasswordForm} from './ChangePasswordForm';
+import {ResetPasswordForm} from './ResetPasswordForm';
 import {withFirebase} from '../../components/Firebase';
-import {changePassword, changePasswordEnd, changePasswordFail} from '../../store/actions/auth';
+import {resetPassword, resetPasswordEnd, resetPasswordFail, resetPasswordSuccess} from '../../store/actions/auth';
 
-import modules from './ChangePassword.module.scss';
+import modules from './ResetPassword.module.scss';
 
 interface IPropTypes extends RouteComponentProps {
-  authenticatedUser?: any;
   authenticationError?: string;
   firebase: any;
-  changePassword: (passwordNew: string, firebase: any) => any;
-  changePasswordEnd: () => void;
-  changePasswordFail: (error: string) => void;
-  changePasswordSuccess: boolean;
+  resetPassword: (email: string, firebase: any) => any;
+  resetPasswordEnd: () => any;
+  resetPasswordFail: (error: string) => void;
+  resetPasswordSuccess: boolean;
 }
 
 interface IState {
   isFormValid: boolean;
 }
 
-class ChangePassword extends React.Component<IPropTypes, IState> {
+class ResetPassword extends React.Component<IPropTypes, IState> {
   state = {
-    isErrorModalVisible: false,
     isFormValid: false,
   }
 
   handleCloseErrorModal = () => {
-    this.props.changePasswordEnd();
+    this.props.resetPasswordEnd();
   }
 
   handleCloseSuccessModal = () => {
-    this.props.changePasswordEnd();
-    this.props.history.push(`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`);
+    this.props.resetPasswordEnd();
+    this.props.history.push(AppRoutesEnum.SIGN_IN);
   }
 
   handleFormFieldsChanged = (changedFields: any, allFields: any) => {
@@ -56,11 +54,11 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
   }
 
   handleFormSubmit = (values: any) => {
-    this.props.changePassword(values.passwordNew, this.props.firebase);
+    this.props.resetPassword(values.email, this.props.firebase);
   }
 
   handleFormSubmitFailed = () => {
-    this.props.changePasswordFail('There was a problem submitting the form');
+    this.props.resetPasswordFail('There was a problem submitting the form');
   }
 
   render() {
@@ -68,7 +66,7 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
       <div className={modules.resetPassword}>
         <Typography>Reset password</Typography>
 
-        <ChangePasswordForm
+        <ResetPasswordForm
           isFormValid={this.state.isFormValid}
           onFormFieldsChange={this.handleFormFieldsChanged}
           onFormSubmit={this.handleFormSubmit}
@@ -80,15 +78,15 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
             isVisible={this.props.authenticationError.length > 0}
             message={this.props.authenticationError}
             onCloseModal={this.handleCloseErrorModal}
-            modalTitle="Change password fail"
+            modalTitle="Reset password fail"
           />
         }
 
         <SuccessModal
-          isVisible={this.props.changePasswordSuccess}
-          message='Password change successful'
+          isVisible={this.props.resetPasswordSuccess}
+          message='A link to reset the password has been sent to your email'
           onCloseModal={this.handleCloseSuccessModal}
-          modalTitle="Change password success"
+          modalTitle="Reset password success"
         />
       </div>
     );
@@ -97,13 +95,14 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
 
 const mapStateToProps = (state: any) => {
   return {
-    authenticatedUser: state.auth.authenticatedUser,
     authenticationError: state.auth.authError,
-    changePasswordSuccess: state.auth.changePasswordSuccess,
+    resetPasswordSuccess: state.auth.resetPasswordSuccess,
   }
 }
 
-const WrappedComponent = connect(mapStateToProps, {changePassword, changePasswordEnd, changePasswordFail})(withRouter(withFirebase(ChangePassword)));
+const WrappedComponent = connect(
+  mapStateToProps, {resetPassword, resetPasswordEnd, resetPasswordFail}
+)(withRouter(withFirebase(ResetPassword)));
 
-export {WrappedComponent as ChangePassword};
+export {WrappedComponent as ResetPassword};
 

@@ -5,9 +5,13 @@ export interface ChangePasswordAction {
   type: ActionTypesEnum.ChangePassword;
 }
 
+export interface ChangePasswordEndAction {
+  type: ActionTypesEnum.ChangePasswordEnd;
+}
+
 export interface ChangePasswordFailAction {
   type: ActionTypesEnum.ChangePasswordFail;
-  changePasswordError: string;
+  authError: string;
 }
 
 export interface ChangePasswordStartAction {
@@ -18,14 +22,17 @@ export interface ChangePasswordSuccessAction {
   type: ActionTypesEnum.ChangePasswordSuccess;
 }
 
-export interface PasswordRemindFailAction {
-  type: ActionTypesEnum.PasswordRemindFail;
-  passwordRemindError: string;
+export interface ResetPasswordEndAction {
+  type: ActionTypesEnum.ResetPasswordEnd,
 }
 
-export interface PasswordRemindSuccessAction {
-  type: ActionTypesEnum.PasswordRemindSuccess;
-  passwordRemindLinkSent: boolean;
+export interface ResetPasswordFailAction {
+  type: ActionTypesEnum.ResetPasswordFail;
+  authError: string;
+}
+
+export interface ResetPasswordSuccessAction {
+  type: ActionTypesEnum.ResetPasswordSuccess;
 }
 
 export interface SignInAction {
@@ -43,7 +50,7 @@ export interface SignInSuccessAction {
 
 export interface SignInFailAction {
   type: ActionTypesEnum.SignInFail;
-  signInError: string;
+  authError: string;
 }
 
 export interface SignOutAction {
@@ -75,11 +82,12 @@ export interface SignUpSuccessAction {
 
 export interface SignUpFailAction {
   type: ActionTypesEnum.SignUpFail;
-  signUpError: string;
+  authError: string;
 }
 
-export type ActionType = ChangePasswordAction | ChangePasswordFailAction | ChangePasswordStartAction | ChangePasswordSuccessAction |
-  PasswordRemindFailAction | PasswordRemindSuccessAction | SignOutFailAction | SignOutSuccessAction | SignInStartAction |
-  SignInSuccessAction | SignInFailAction | SignUpStartAction | SignUpSuccessAction | SignUpFailAction;
+export type ActionType = ChangePasswordEndAction | ChangePasswordAction | ChangePasswordFailAction |
+  ChangePasswordStartAction | ChangePasswordSuccessAction | ResetPasswordEndAction | ResetPasswordFailAction | ResetPasswordSuccessAction |
+  SignOutFailAction | SignOutSuccessAction | SignInStartAction | SignInSuccessAction | SignInFailAction | SignUpStartAction |
+  SignUpSuccessAction | SignUpFailAction;
 
 

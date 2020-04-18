@@ -12,6 +12,7 @@ import {SignOutButton} from './SignOutButton';
 import modules from './Header.module.scss';
 
 interface IPropTypes {
+  authenticatedUser?: any;
   signOut: (firebase: any) => any;
   isAuthenticated: boolean;
 }
@@ -28,9 +29,15 @@ class Header extends React.Component<IPropTypes> {
 
         <Menu.Item key="2"><Link to={AppRoutesEnum.ADMIN}>Admin</Link></Menu.Item>
 
-        <Menu.Item key="3"><Link to={AppRoutesEnum.ACCOUNT}>Account</Link></Menu.Item>
+        {this.props.authenticatedUser &&
+          <Menu.Item key="3">
+            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`}>Account</Link>
+          </Menu.Item>
+        }
 
-        <Menu.Item key="4"><SignOutButton signOut={this.props.signOut} /></Menu.Item>
+        <Menu.Item key="4">
+          <SignOutButton isAuthenticated={this.props.isAuthenticated} signOut={this.props.signOut} />
+        </Menu.Item>
       </Menu>
     );
   }
@@ -62,6 +69,7 @@ class Header extends React.Component<IPropTypes> {
 
 const mapStateToProps = (state: any) => {
   return {
+    authenticatedUser: state.auth.authenticatedUser,
     isAuthenticated: state.auth.isAuthenticated,
   }
 };

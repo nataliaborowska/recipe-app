@@ -1,5 +1,6 @@
 export enum ActionTypesEnum {
   ChangePassword,
+  ChangePasswordEnd,
   ChangePasswordFail,
   ChangePasswordStart,
   ChangePasswordSuccess,
@@ -10,8 +11,9 @@ export enum ActionTypesEnum {
   SignOut,
   SignOutFail,
   SignOutSuccess,
-  PasswordRemindFail,
-  PasswordRemindSuccess,
+  ResetPasswordEnd,
+  ResetPasswordFail,
+  ResetPasswordSuccess,
   SignUp,
   SignUpFail,
   SignUpStart,

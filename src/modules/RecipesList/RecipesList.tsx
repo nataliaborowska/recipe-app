@@ -2,10 +2,11 @@ import React from 'react';
 import {Col, Row, Typography} from 'antd';
 
 import {RecipeCard} from './RecipeCard';
+import {withAuthorization} from '../../common/withAuthorization';
 
 import styles from './RecipesList.module.scss';
 
-export const RecipesList: React.FC = () => {
+const RecipesList: React.FC = () => {
   const recipes = [
     {
       description: 'This is a description',
@@ -73,3 +74,7 @@ export const RecipesList: React.FC = () => {
     </div>
   );
 }
+
+const WrappedComponent = withAuthorization(RecipesList);
+
+export {WrappedComponent as RecipesList};

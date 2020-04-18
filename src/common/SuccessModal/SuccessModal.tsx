@@ -1,6 +1,6 @@
 import React from 'react';
 import {Modal} from 'antd';
-import {WarningOutlined} from '@ant-design/icons';
+import {CheckOutlined} from '@ant-design/icons';
 
 interface IPropTypes {
   message: string;
@@ -9,13 +9,13 @@ interface IPropTypes {
   onCloseModal: () => void;
 }
 
-export const ErrorModal: React.FC<IPropTypes> = (props) => (
+export const SuccessModal: React.FC<IPropTypes> = (props) => (
   <Modal
     onOk={props.onCloseModal}
     onCancel={props.onCloseModal}
     title={props.modalTitle}
     visible={props.isVisible}
   >
-    <p><WarningOutlined /> {props.message}</p>
+    <p><CheckOutlined /> {props.message}</p>
   </Modal>
 )

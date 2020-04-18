@@ -4,59 +4,68 @@ import {ActionTypesEnum} from '../actions/typesEnum';
 const initialState = {
   authenticatedUser: null,
   authIsLoading: false,
-  authError: undefined,
+  authError: null,
   isAuthenticated: false,
-  passwordRemindLinkSent: false,
+  resetPasswordSuccess: false,
+  changePasswordSuccess: false,
 }
 
 export const authReducer = (state = initialState, action: ActionType) => {
   switch (action.type) {
+    case ActionTypesEnum.ChangePasswordFail:
+    case ActionTypesEnum.ResetPasswordFail:
+    case ActionTypesEnum.SignInFail:
+    case ActionTypesEnum.SignUpFail:
+      return {
+        ...state,
+        authIsLoading: false,
+        authError: action.authError,
+      }
+    case ActionTypesEnum.ChangePasswordEnd: {
+      return {
+        ...state,
+        authError: null,
+        changePasswordSuccess: false,
+      }
+    }
     case ActionTypesEnum.ChangePasswordStart:
       return {
         ...state,
         authIsLoading: true,
         authError: null,
       }
-    case ActionTypesEnum.ChangePasswordFail:
-      return {
-        ...state,
-        authIsLoading: false,
-        authError: action.changePasswordError,
-      }
     case ActionTypesEnum.ChangePasswordSuccess:
       return {
         ...state,
         authIsLoading: false,
+        changePasswordSuccess: true
       }
-    case ActionTypesEnum.PasswordRemindFail:
+    case ActionTypesEnum.ResetPasswordSuccess:
       return {
         ...state,
-        authError: action.passwordRemindError,
+        resetPasswordSuccess: true,
       }
-    case ActionTypesEnum.PasswordRemindSuccess:
+    case ActionTypesEnum.ResetPasswordEnd:
       return {
         ...state,
-        passwordRemindLinkSent: action.passwordRemindLinkSent,
+        resetPasswordSuccess: false,
+        authError: null,
       }
     case ActionTypesEnum.SignInStart:
+    case ActionTypesEnum.SignUpStart:
       return {
         ...state,
         authIsLoading: true,
         authError: null,
         authenticatedUser: null,
       }
-    case ActionTypesEnum.SignInFail:
-      return {
-        ...state,
-        authIsLoading: false,
-        authError: action.signInError,
-      }
     case ActionTypesEnum.SignInSuccess:
+    case ActionTypesEnum.SignUpSuccess:
       return {
         ...state,
         authIsLoading: false,
         isAuthenticated: true,
-        authenticatedUser: action.authenticatedUser,
+        authenticatedUser: action.authenticatedUser.user,
       }
     case ActionTypesEnum.SignOutFail:
       return {
@@ -69,26 +78,6 @@ export const authReducer = (state = initialState, action: ActionType) => {
         ...state,
         isAuthenticated: false,
         authenticatedUser: null,
-      }
-    case ActionTypesEnum.SignUpStart:
-      return {
-        ...state,
-        authIsLoading: true,
-        authError: null,
-        authenticatedUser: null,
-      }
-    case ActionTypesEnum.SignUpFail:
-      return {
-        ...state,
-        authIsLoading: false,
-        authError: action.signUpError,
-      }
-    case ActionTypesEnum.SignUpSuccess:
-      return {
-        ...state,
-        authIsLoading: false,
-        isAuthenticated: true,
-        authenticatedUser: action.authenticatedUser,
       }
     default:
       return state;

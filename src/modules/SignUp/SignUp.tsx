@@ -16,7 +16,7 @@ interface IPropTypes {
   authenticationIsLoading: boolean;
   firebase: any;
   isAuthenticated: boolean;
-  signUp: (email: string, password: string, firebase: any) => any;
+  signUp: (email: string, password: string, username: string, firebase: any) => any;
 }
 
 interface IState {
@@ -59,7 +59,7 @@ class SignUp extends React.Component<IPropTypes, IState> {
   }
 
   handleFormSubmit = (values: any) => {
-    this.props.signUp(values.email, values.password, this.props.firebase);
+    this.props.signUp(values.email, values.password, values.username, this.props.firebase);
   }
 
   handleFormSubmitFailed = () => {
@@ -88,10 +88,10 @@ class SignUp extends React.Component<IPropTypes, IState> {
 
         {this.props.authenticationError &&
           <ErrorModal
-            errorMessage={this.props.authenticationError}
+            message={this.props.authenticationError}
             isVisible={this.state.isErrorModalVisible}
             modalTitle="Sign up error"
-            onCloseErrorModal={this.handleCloseErrorModal}
+            onCloseModal={this.handleCloseErrorModal}
           />
         }
       </div>
