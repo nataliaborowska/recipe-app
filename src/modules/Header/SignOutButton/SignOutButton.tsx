@@ -1,12 +1,13 @@
 import React from 'react';
 import {Button} from 'antd';
 
-import {withFirebase} from '../../../components/Firebase';
+import {AppThunk} from '../../../store/store';
+import {IFirebase, withFirebase} from '../../../components/Firebase';
 
 interface IPropTypes {
-  firebase: any;
+  firebase: IFirebase;
   isAuthenticated: boolean;
-  signOut: (frebase: any) => any;
+  signOut: (firebase: IFirebase) => AppThunk;
 }
 
 const SignOutButton: React.FC<IPropTypes> = (props) => {

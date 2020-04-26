@@ -1,22 +1,48 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
 import {Spin, Typography} from 'antd';
 
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
-import {SignInForm} from './SignInForm';
-import {withFirebase} from '../../components/Firebase';
+import {IFirebase, withFirebase} from '../../components/Firebase';
 import {signIn} from '../../store/actions/auth';
+import {SignInForm} from './SignInForm';
 
 import modules from './SignIn.module.scss';
 
-interface IPropTypes {
-  authenticationError?: string;
-  authenticationIsLoading: boolean;
-  firebase: any;
-  isAuthenticated: boolean;
-  signIn: (email: string, password: string, firebase: any) => any;
+export interface IFormField {
+  errors?: Array<string>;
+  name?: string | number | (string | number)[];
+  touched?: boolean;
+  validating?: boolean;
+  value?: string;
+}
+
+interface IRootStore {
+  auth: {
+    authError: null | string;
+    authIsLoading: boolean;
+    isAuthenticated: boolean;
+  }
+}
+
+const mapStateToProps = (state: IRootStore) => {
+  return {
+    authenticationError: state.auth.authError,
+    authenticationIsLoading: state.auth.authIsLoading,
+    isAuthenticated: state.auth.isAuthenticated,
+  };
+}
+
+const mapDispatchToProps = {signIn};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface IPropTypes extends PropsFromRedux {
+  firebase: IFirebase;
 }
 
 interface IState {
@@ -32,7 +58,7 @@ class SignIn extends React.Component<IPropTypes, IState> {
     signInError: false,
   }
 
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: IPropTypes) {
     if (prevProps.authenticationError !== this.props.authenticationError && this.props.authenticationError) {
       this.setState({isErrorModalVisible: true});
     }
@@ -44,9 +70,9 @@ class SignIn extends React.Component<IPropTypes, IState> {
     });
   }
 
-  handleFormFieldsChanged = (changedFields: any, allFields: any) => {
-    const formInvalidFields = allFields.filter((field: any) => {
-      if (!field.value || field.errors.length > 0) {
+  handleFormFieldsChanged = (changedFields: Array<IFormField>, allFields: Array<IFormField>) => {
+    const formInvalidFields = allFields.filter((field: IFormField) => {
+      if (!field.value || (field.errors && field.errors.length > 0)) {
         return field;
       }
     });
@@ -74,7 +100,7 @@ class SignIn extends React.Component<IPropTypes, IState> {
     return (
 
       <div className={modules.signIn}>
-        <Typography>Sign In</Typography>
+        <Typography.Title>Sign In</Typography.Title>
 
         {this.props.authenticationIsLoading ?
           <Spin />
@@ -104,15 +130,7 @@ class SignIn extends React.Component<IPropTypes, IState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    authenticationError: state.auth.authError,
-    authenticationIsLoading: state.auth.authIsLoading,
-    isAuthenticated: state.auth.isAuthenticated,
-  };
-}
-
-const WrappedComponent = connect(mapStateToProps, {signIn})(withFirebase(SignIn));
+const WrappedComponent = connector(withFirebase(SignIn));
 
 export {WrappedComponent as SignIn};
 

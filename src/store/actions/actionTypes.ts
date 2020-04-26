@@ -1,10 +1,7 @@
 import {ActionTypesEnum} from './typesEnum';
+import {IUser} from '../reducers/authReducer';
 
 //action types
-export interface ChangePasswordAction {
-  type: ActionTypesEnum.ChangePassword;
-}
-
 export interface ChangePasswordEndAction {
   type: ActionTypesEnum.ChangePasswordEnd;
 }
@@ -22,6 +19,23 @@ export interface ChangePasswordSuccessAction {
   type: ActionTypesEnum.ChangePasswordSuccess;
 }
 
+export interface FetchUsersFailAction {
+  type: ActionTypesEnum.FetchUsersFail,
+}
+
+export interface FetchUsersStartAction {
+  type: ActionTypesEnum.FetchUsersStart,
+}
+
+export interface FetchUsersSuccessAction {
+  type: ActionTypesEnum.FetchUsersSuccess,
+  usersList: Array<IUser>
+}
+
+export interface RemoveUsersListEndAction {
+  type: ActionTypesEnum.RemoveUsersListEnd,
+}
+
 export interface ResetPasswordEndAction {
   type: ActionTypesEnum.ResetPasswordEnd,
 }
@@ -35,26 +49,18 @@ export interface ResetPasswordSuccessAction {
   type: ActionTypesEnum.ResetPasswordSuccess;
 }
 
-export interface SignInAction {
-  type: ActionTypesEnum.SignIn;
-}
-
 export interface SignInStartAction {
   type: ActionTypesEnum.SignInStart;
 }
 
 export interface SignInSuccessAction {
   type: ActionTypesEnum.SignInSuccess;
-  authenticatedUser: any;
+  authenticatedUser: firebase.auth.UserCredential;
 }
 
 export interface SignInFailAction {
   type: ActionTypesEnum.SignInFail;
   authError: string;
-}
-
-export interface SignOutAction {
-  type: ActionTypesEnum.SignOut;
 }
 
 export interface SignOutFailAction {
@@ -64,20 +70,16 @@ export interface SignOutFailAction {
 
 export interface SignOutSuccessAction {
   type: ActionTypesEnum.SignOutSuccess;
-  authenticatedUser: any;
+  authenticatedUser: null;
 }
 
 export interface SignUpStartAction {
   type: ActionTypesEnum.SignUpStart;
 }
 
-export interface SignUpAction {
-  type: ActionTypesEnum.SignUp;
-}
-
 export interface SignUpSuccessAction {
   type: ActionTypesEnum.SignUpSuccess;
-  authenticatedUser: any;
+  authenticatedUser: firebase.auth.UserCredential;
 }
 
 export interface SignUpFailAction {
@@ -85,9 +87,10 @@ export interface SignUpFailAction {
   authError: string;
 }
 
-export type ActionType = ChangePasswordEndAction | ChangePasswordAction | ChangePasswordFailAction |
-  ChangePasswordStartAction | ChangePasswordSuccessAction | ResetPasswordEndAction | ResetPasswordFailAction | ResetPasswordSuccessAction |
-  SignOutFailAction | SignOutSuccessAction | SignInStartAction | SignInSuccessAction | SignInFailAction | SignUpStartAction |
-  SignUpSuccessAction | SignUpFailAction;
+export type AuthActionType = ChangePasswordEndAction | ChangePasswordFailAction |
+  ChangePasswordStartAction | ChangePasswordSuccessAction | FetchUsersFailAction | FetchUsersSuccessAction |
+  FetchUsersStartAction | RemoveUsersListEndAction | ResetPasswordEndAction | ResetPasswordFailAction |
+  ResetPasswordSuccessAction | SignOutFailAction | SignOutSuccessAction | SignInStartAction | SignInSuccessAction |
+  SignInFailAction | SignUpStartAction | SignUpSuccessAction | SignUpFailAction;
 
 

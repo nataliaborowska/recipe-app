@@ -1,10 +1,11 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {Typography} from 'antd';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
+import {IFirebase} from '../../components/Firebase';
 import {SuccessModal} from '../../common/SuccessModal';
 import {ChangePasswordForm} from './ChangePasswordForm';
 import {withFirebase} from '../../components/Firebase';
@@ -12,14 +13,38 @@ import {changePassword, changePasswordEnd, changePasswordFail} from '../../store
 
 import modules from './ChangePassword.module.scss';
 
-interface IPropTypes extends RouteComponentProps {
-  authenticatedUser?: any;
-  authenticationError?: string;
-  firebase: any;
-  changePassword: (passwordNew: string, firebase: any) => any;
-  changePasswordEnd: () => void;
-  changePasswordFail: (error: string) => void;
-  changePasswordSuccess: boolean;
+export interface IFormField {
+  errors?: Array<string>;
+  name?: string | number | (string | number)[];
+  touched?: boolean;
+  validating?: boolean;
+  value?: string;
+}
+
+interface IRootStore {
+  auth: {
+    authenticatedUser: null | firebase.auth.UserCredential;
+    authError: null | string;
+    changePasswordSuccess: boolean;
+  }
+}
+
+const mapStateToProps = (state: IRootStore) => {
+  return {
+    authenticatedUser: state.auth.authenticatedUser,
+    authenticationError: state.auth.authError,
+    changePasswordSuccess: state.auth.changePasswordSuccess,
+  }
+}
+
+const mapDispatchToProps = {changePassword, changePasswordEnd, changePasswordFail};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface IPropTypes extends PropsFromRedux, RouteComponentProps {
+  firebase: IFirebase;
 }
 
 interface IState {
@@ -38,12 +63,14 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
 
   handleCloseSuccessModal = () => {
     this.props.changePasswordEnd();
-    this.props.history.push(`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`);
+    if (this.props.authenticatedUser && this.props.authenticatedUser.user) {
+      this.props.history.push(`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.user.uid}`);
+    }
   }
 
-  handleFormFieldsChanged = (changedFields: any, allFields: any) => {
-    const formInvalidFields = allFields.filter((field: any) => {
-      if (!field.value || field.errors.length > 0) {
+  handleFormFieldsChanged = (changedFields: Array<IFormField>, allFields: Array<IFormField>) => {
+    const formInvalidFields = allFields.filter((field: IFormField) => {
+      if (!field.value || (field.errors && field.errors.length > 0)) {
         return field;
       }
     });
@@ -66,7 +93,7 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
   render() {
     return (
       <div className={modules.resetPassword}>
-        <Typography>Reset password</Typography>
+        <Typography.Title>Reset password</Typography.Title>
 
         <ChangePasswordForm
           isFormValid={this.state.isFormValid}
@@ -95,15 +122,7 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    authenticatedUser: state.auth.authenticatedUser,
-    authenticationError: state.auth.authError,
-    changePasswordSuccess: state.auth.changePasswordSuccess,
-  }
-}
-
-const WrappedComponent = connect(mapStateToProps, {changePassword, changePasswordEnd, changePasswordFail})(withRouter(withFirebase(ChangePassword)));
+const WrappedComponent = connector(withRouter(withFirebase(ChangePassword)));
 
 export {WrappedComponent as ChangePassword};
 

@@ -1,22 +1,48 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {Spin, Typography} from 'antd';
 import {Redirect} from 'react-router-dom';
 
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
-import {SignUpForm} from './SignUpForm';
-import {withFirebase} from '../../components/Firebase';
+import {IFirebase, withFirebase} from '../../components/Firebase';
 import {signUp} from '../../store/actions/auth';
+import {SignUpForm} from './SignUpForm';
 
 import modules from './SignUp.module.scss';
 
-interface IPropTypes {
-  authenticationError?: string;
-  authenticationIsLoading: boolean;
-  firebase: any;
-  isAuthenticated: boolean;
-  signUp: (email: string, password: string, username: string, firebase: any) => any;
+export interface IFormField {
+  errors?: Array<string>;
+  name?: string | number | (string | number)[];
+  touched?: boolean;
+  validating?: boolean;
+  value?: string;
+}
+
+interface IRootStore {
+  auth: {
+    authError: null | string;
+    authIsLoading: boolean;
+    isAuthenticated: boolean;
+  }
+}
+
+const mapStateToProps = (state: IRootStore) => {
+  return {
+    authenticationError: state.auth.authError,
+    authenticationIsLoading: state.auth.authIsLoading,
+    isAuthenticated: state.auth.isAuthenticated,
+  };
+}
+
+const mapDispatchToProps = {signUp};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromredux = ConnectedProps<typeof connector>;
+
+interface IPropTypes extends PropsFromredux {
+  firebase: IFirebase;
 }
 
 interface IState {
@@ -32,7 +58,7 @@ class SignUp extends React.Component<IPropTypes, IState> {
     signUpError: false,
   }
 
-  componentDidUpdate(prevProps: any) {
+  componentDidUpdate(prevProps: IPropTypes) {
     if (prevProps.authenticationError !== this.props.authenticationError && this.props.authenticationError) {
       this.setState({isErrorModalVisible: true});
     }
@@ -44,9 +70,9 @@ class SignUp extends React.Component<IPropTypes, IState> {
     });
   }
 
-  handleFormFieldsChanged = (changedFields: any, allFields: any) => {
-    const formInvalidFields = allFields.filter((field: any) => {
-      if (!field.value || field.errors.length > 0) {
+  handleFormFieldsChanged = (changedFields: Array<IFormField>, allFields: Array<IFormField>) => {
+    const formInvalidFields = allFields.filter((field: IFormField) => {
+      if (!field.value || (field.errors && field.errors.length > 0)) {
         return field;
       }
     });
@@ -73,7 +99,7 @@ class SignUp extends React.Component<IPropTypes, IState> {
 
     return (
       <div className={modules.signUp}>
-        <Typography>Sign Up</Typography>
+        <Typography.Title>Sign Up</Typography.Title>
 
         {this.props.authenticationIsLoading ?
           <Spin />
@@ -99,15 +125,7 @@ class SignUp extends React.Component<IPropTypes, IState> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    authenticationError: state.auth.authError,
-    authenticationIsLoading: state.auth.authIsLoading,
-    isAuthenticated: state.auth.isAuthenticated,
-  };
-}
-
-const WrappedComponent = connect(mapStateToProps, {signUp})(withFirebase(SignUp));
+const WrappedComponent = connector(withFirebase(SignUp));
 
 export {WrappedComponent as SignUp};
 

@@ -6,7 +6,7 @@ import {Provider} from 'react-redux';
 import App from './App';
 import store from './store/store';
 import * as serviceWorker from './serviceWorker';
-import Firebase, {FirebaseContext} from './components/Firebase';
+import {Firebase, FirebaseContext} from './components/Firebase';
 
 import 'antd/dist/antd.css';
 import './index.css';

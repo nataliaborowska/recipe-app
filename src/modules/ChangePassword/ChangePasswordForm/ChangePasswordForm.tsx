@@ -1,8 +1,10 @@
 import React from 'react';
 import {Button, Form, Input} from 'antd';
 
+import {IFormField} from '../ChangePassword';
+
 interface IPropTypes {
-  onFormFieldsChange: (changedFields: any, allFields: any) => void;
+  onFormFieldsChange: (changedFields: Array<IFormField>, allFields: Array<IFormField>) => void;
   onFormSubmit: (values: any) => void;
   onFormSubmitFailed: () => void;
   isFormValid: boolean;

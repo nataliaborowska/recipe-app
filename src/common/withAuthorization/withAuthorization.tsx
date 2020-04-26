@@ -1,13 +1,28 @@
 import React from 'react';
-import {connect} from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
-// import {}
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
-import {withFirebase} from '../../components/Firebase';
+import {IFirebase, withFirebase} from '../../components/Firebase';
 
-interface IPropTypes extends RouteComponentProps {
-  firebase: any;
+interface IRootStore {
+  auth: {
+    isAuthenticated: boolean;
+  }
+}
+
+const mapStateToProps = (state: IRootStore) => {
+  return {
+    isAuthenticated: state.auth.isAuthenticated,
+  }
+}
+
+const connector = connect(mapStateToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface IPropTypes extends RouteComponentProps, PropsFromRedux {
+  firebase: IFirebase;
   isAuthenticated: boolean;
 }
 
@@ -44,11 +59,5 @@ export const withAuthorization = (Component: any) => {
     }
   }
 
-  const mapStateToProps = (state: any) => {
-    return {
-      isAuthenticated: state.auth.isAuthenticated,
-    }
-  }
-
-  return connect(mapStateToProps)(withRouter(withFirebase(WithAuthorization)));
+  return connector(withRouter(withFirebase(WithAuthorization)));
 }

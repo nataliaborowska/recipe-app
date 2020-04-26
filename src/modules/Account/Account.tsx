@@ -9,7 +9,7 @@ import modules from './Account.module.scss';
 
 const Account: React.FC = () => (
   <div className={modules.account}>
-    <Typography>My account</Typography>
+    <Typography.Title>My account</Typography.Title>
 
     <Link to={AppRoutesEnum.CHANGE_PASSWORD}>Change password</Link>
   </div>

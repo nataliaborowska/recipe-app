@@ -1,47 +1,48 @@
 import {Dispatch} from 'redux';
 
 import {ActionTypesEnum} from './typesEnum';
+import {AppThunk} from '../store';
+import {IFirebase} from '../../components/Firebase';
 
 import {
-  ChangePasswordAction,
   ChangePasswordEndAction,
   ChangePasswordFailAction,
   ChangePasswordStartAction,
   ChangePasswordSuccessAction,
+  FetchUsersFailAction,
+  FetchUsersStartAction,
+  FetchUsersSuccessAction,
+  RemoveUsersListEndAction,
   ResetPasswordEndAction,
   ResetPasswordFailAction,
   ResetPasswordSuccessAction,
-  SignInAction,
   SignInStartAction,
   SignInSuccessAction,
   SignInFailAction,
-  SignOutAction,
   SignOutFailAction,
   SignOutSuccessAction,
   SignUpStartAction,
-  SignUpAction,
   SignUpSuccessAction,
   SignUpFailAction,
 } from './actionTypes';
 
 //action creators
-
-export const changePassword = (passwordNew: string, firebase: any) => {
+export const changePassword = (passwordNew: string, firebase: IFirebase): AppThunk => {
   return async (dispatch: Dispatch) => {
-    dispatch<ChangePasswordStartAction>(changePasswordStart())
+    dispatch<ChangePasswordStartAction>({
+      type: ActionTypesEnum.ChangePasswordStart,
+    });
     try {
-      await firebase.passwordUpdate(passwordNew);
+      if (firebase.passwordUpdate) {
+        await firebase.passwordUpdate(passwordNew);
+      }
 
-      dispatch<ChangePasswordSuccessAction>(changePasswordSuccess());
+      dispatch<ChangePasswordSuccessAction>({
+        type: ActionTypesEnum.ChangePasswordSuccess,
+      });
     } catch (error) {
       dispatch<ChangePasswordFailAction>(changePasswordFail(error.message));
     }
-  }
-}
-
-export const changePasswordStart = (): ChangePasswordStartAction => {
-  return {
-    type: ActionTypesEnum.ChangePasswordStart,
   }
 }
 
@@ -58,31 +59,62 @@ export const changePasswordFail = (error: string): ChangePasswordFailAction => {
   }
 }
 
-export const changePasswordSuccess = (): ChangePasswordSuccessAction => {
-  return {
-    type: ActionTypesEnum.ChangePasswordSuccess,
+export const fetchUsersList = (firebase: IFirebase): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    dispatch<FetchUsersStartAction>({
+      type: ActionTypesEnum.FetchUsersStart,
+    });
+
+    try {
+      await firebase.users().on('value', (snapshot: firebase.database.DataSnapshot) => {
+        const users = snapshot.val();
+        const usersList = Object.keys(users).map(key => {
+          return {
+            ...users[key],
+            userId: key,
+          }
+        });
+        dispatch<FetchUsersSuccessAction>({
+          type: ActionTypesEnum.FetchUsersSuccess,
+          usersList: usersList,
+        });
+      });
+    } catch (error) {
+      dispatch<FetchUsersFailAction>({
+        type: ActionTypesEnum.FetchUsersFail,
+      });
+    }
   }
 }
 
-export const resetPassword = (email: string, firebase: any) => {
+export const removeUsersList = (firebase: IFirebase): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    try {
+      await firebase.users().off();
+    } catch (error) {
+      throw (error);
+    } finally {
+      dispatch<RemoveUsersListEndAction>({
+        type: ActionTypesEnum.RemoveUsersListEnd,
+      });
+    }
+  }
+}
+
+export const resetPassword = (email: string, firebase: IFirebase): AppThunk => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase.passwordReset(email);
 
-      dispatch<ResetPasswordSuccessAction>(resetPasswordSuccess());
+      dispatch<ResetPasswordSuccessAction>({
+        type: ActionTypesEnum.ResetPasswordSuccess,
+      });
 
     } catch (error) {
       dispatch<ResetPasswordFailAction>(resetPasswordFail(error.message));
     }
   }
 }
-
-export const resetPasswordSuccess = (): ResetPasswordSuccessAction => {
-  return {
-    type: ActionTypesEnum.ResetPasswordSuccess,
-  }
-}
-
 
 export const resetPasswordEnd = (): ResetPasswordEndAction => {
   return {
@@ -97,122 +129,91 @@ export const resetPasswordFail = (error: string): ResetPasswordFailAction => {
   }
 }
 
-export const signIn = (email: string, password: string, firebase: any) => {
-  return async (dispatch: Dispatch) => {
-    dispatch<SignInStartAction>(signInStart());
-
-    try {
-      const authenticatedUser = await firebase.signInWithEmailAndPassword(email, password);
-
-      dispatch<SignInSuccessAction>(signInSuccess(authenticatedUser))
-    } catch (error) {
-      dispatch<SignInFailAction>(signInFail(error.message));
-    }
-  }
-};
-
-export const signInStart = (): SignInStartAction => {
-  return {
-    type: ActionTypesEnum.SignInStart,
-  }
-}
-
-export const signInSuccess = (authenticatedUser: any): SignInSuccessAction => {
-  return {
-    type: ActionTypesEnum.SignInSuccess,
-    authenticatedUser: authenticatedUser,
-  }
-}
-
-export const signInFail = (error: string): SignInFailAction => {
-  return {
-    type: ActionTypesEnum.SignInFail,
-    authError: error,
-  }
-}
-
-export const signOut = (firebase: any) => {
-  return async (dispatch: Dispatch) => {
-    try {
-      await firebase.signOut();
-
-      dispatch<SignOutSuccessAction>(signOutSuccess());
-    } catch (error) {
-      dispatch<SignOutFailAction>(signOutFail(error.message));
-    }
-  }
-}
-
-export const signOutFail = (error: string): SignOutFailAction => {
-  return {
-    type: ActionTypesEnum.SignOutFail,
-    signOutError: error,
-  }
-}
-
-export const signOutSuccess = (): SignOutSuccessAction => {
-  return {
-    type: ActionTypesEnum.SignOutSuccess,
-    authenticatedUser: null,
-  }
-}
-
-export const signUp = (email: string, password: string, username: string, firebase: any) => {
-  return async (dispatch: Dispatch) => {
-    dispatch<SignUpStartAction>(signUpStart());
-
-    try {
-      const authenticatedUser = await firebase.createUserWithEmailAndPassword(email, password);
-
-      dispatch<any>(saveUserToDatabase(email, username, authenticatedUser, firebase))
-      //dispatch<SignUpSuccessAction>(signUpSuccess(authenticatedUser));
-    } catch (error) {
-      dispatch<SignUpFailAction>(signUpFail(error.message));
-    } finally {
-      // if (authenticatedUser) {
-      //   try {
-      //     await firebase
-      //       .user(authenticatedUser.user.uid)
-      //       .set({email, username})
-      //   } catch (error) {
-      //     dispatch<SignUpFailAction>(signUpFail(error.message));
-      //   }
-      // }
-    }
-  }
-}
-
-export const saveUserToDatabase = (email: string, username: string, authenticatedUser: any, firebase: any) => {
+export const saveUserToDatabase = (
+  email: string,
+  username: string,
+  authenticatedUser: any,
+  firebase: IFirebase
+): AppThunk => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase
         .user(authenticatedUser.user.uid)
         .set({email, username});
 
-      dispatch<SignUpSuccessAction>(signUpSuccess(authenticatedUser));
+      dispatch<SignUpSuccessAction>({
+        type: ActionTypesEnum.SignUpSuccess,
+        authenticatedUser: authenticatedUser,
+      });
     } catch (error) {
-      dispatch<SignUpFailAction>(signUpFail(error.message));
+      dispatch<SignUpFailAction>({
+        type: ActionTypesEnum.SignUpFail,
+        authError: error.message,
+      });
     }
   }
 }
 
-export const signUpStart = (): SignUpStartAction => {
-  return {
-    type: ActionTypesEnum.SignUpStart,
+export const signIn = (email: string, password: string, firebase: IFirebase): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    dispatch<SignInStartAction>({
+      type: ActionTypesEnum.SignInStart,
+    });
+
+    try {
+      const authenticatedUser = await firebase.signInWithEmailAndPassword(email, password);
+
+      dispatch<SignInSuccessAction>({
+        type: ActionTypesEnum.SignInSuccess,
+        authenticatedUser: authenticatedUser,
+      });
+    } catch (error) {
+      dispatch<SignInFailAction>({
+        type: ActionTypesEnum.SignInFail,
+        authError: error.message,
+      });
+    }
+  }
+};
+
+export const signOut = (firebase: IFirebase): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    try {
+      await firebase.signOut();
+
+      dispatch<SignOutSuccessAction>({
+        type: ActionTypesEnum.SignOutSuccess,
+        authenticatedUser: null,
+      });
+    } catch (error) {
+      dispatch<SignOutFailAction>({
+        type: ActionTypesEnum.SignOutFail,
+        signOutError: error.message,
+      });
+    }
   }
 }
 
-export const signUpSuccess = (authenticatedUser: any): SignUpSuccessAction => {
-  return {
-    type: ActionTypesEnum.SignUpSuccess,
-    authenticatedUser: authenticatedUser,
+export const signUp = (
+  email: string,
+  password: string,
+  username: string,
+  firebase: IFirebase
+): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    dispatch<SignUpStartAction>({
+      type: ActionTypesEnum.SignUpStart,
+    });
+
+    try {
+      const authenticatedUser = await firebase.createUserWithEmailAndPassword(email, password);
+
+      dispatch<any>(saveUserToDatabase(email, username, authenticatedUser, firebase))
+    } catch (error) {
+      dispatch<SignUpFailAction>({
+        type: ActionTypesEnum.SignUpFail,
+        authError: error.message,
+      });
+    }
   }
 }
-
-export const signUpFail = (error: string): SignUpFailAction => {
-  return {
-    type: ActionTypesEnum.SignUpFail,
-    authError: error,
-  }
-}
-

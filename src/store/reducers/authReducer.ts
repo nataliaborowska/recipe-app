@@ -1,25 +1,66 @@
-import {ActionType} from '../actions/actionTypes';
+import firebase from 'firebase';
+
+import {AuthActionType} from '../actions/actionTypes';
 import {ActionTypesEnum} from '../actions/typesEnum';
 
-const initialState = {
-  authenticatedUser: null,
-  authIsLoading: false,
-  authError: null,
-  isAuthenticated: false,
-  resetPasswordSuccess: false,
-  changePasswordSuccess: false,
+export interface IAuthState {
+  authenticatedUser: null | firebase.auth.UserCredential;
+  authError: null | string;
+  authIsLoading: boolean;
+  changePasswordSuccess: boolean;
+  fetchingUsers: boolean,
+  fetchUsersError: boolean;
+  isAuthenticated: boolean;
+  resetPasswordSuccess: boolean;
+  users: Array<IUser>;
 }
 
-export const authReducer = (state = initialState, action: ActionType) => {
+export interface IUser {
+  email: string;
+  userId: string;
+  username: string;
+}
+
+const initialState: IAuthState = {
+  authenticatedUser: null as null | firebase.auth.UserCredential,
+  authError: null as null | string,
+  authIsLoading: false,
+  changePasswordSuccess: false,
+  fetchingUsers: false,
+  fetchUsersError: false,
+  isAuthenticated: false,
+  resetPasswordSuccess: false,
+  users: [] as Array<IUser>,
+}
+
+export const authReducer = (state = initialState, action: AuthActionType): IAuthState => {
   switch (action.type) {
+    case ActionTypesEnum.FetchUsersFail:
+      return {
+        ...state,
+        fetchingUsers: false,
+        fetchUsersError: true,
+      }
+    case ActionTypesEnum.FetchUsersStart:
+      return {
+        ...state,
+        fetchingUsers: true,
+        fetchUsersError: false,
+      }
+    case ActionTypesEnum.FetchUsersSuccess:
+      return {
+        ...state,
+        fetchingUsers: false,
+        users: action.usersList,
+      }
     case ActionTypesEnum.ChangePasswordFail:
     case ActionTypesEnum.ResetPasswordFail:
     case ActionTypesEnum.SignInFail:
     case ActionTypesEnum.SignUpFail:
       return {
         ...state,
-        authIsLoading: false,
         authError: action.authError,
+        authIsLoading: false,
       }
     case ActionTypesEnum.ChangePasswordEnd: {
       return {
@@ -31,8 +72,8 @@ export const authReducer = (state = initialState, action: ActionType) => {
     case ActionTypesEnum.ChangePasswordStart:
       return {
         ...state,
-        authIsLoading: true,
         authError: null,
+        authIsLoading: true,
       }
     case ActionTypesEnum.ChangePasswordSuccess:
       return {
@@ -40,44 +81,49 @@ export const authReducer = (state = initialState, action: ActionType) => {
         authIsLoading: false,
         changePasswordSuccess: true
       }
+    case ActionTypesEnum.RemoveUsersListEnd:
+      return {
+        ...state,
+        users: [],
+      }
     case ActionTypesEnum.ResetPasswordSuccess:
       return {
         ...state,
+        authIsLoading: false,
         resetPasswordSuccess: true,
       }
     case ActionTypesEnum.ResetPasswordEnd:
       return {
         ...state,
-        resetPasswordSuccess: false,
         authError: null,
+        resetPasswordSuccess: false,
       }
     case ActionTypesEnum.SignInStart:
     case ActionTypesEnum.SignUpStart:
       return {
         ...state,
-        authIsLoading: true,
-        authError: null,
         authenticatedUser: null,
+        authError: null,
+        authIsLoading: true,
       }
     case ActionTypesEnum.SignInSuccess:
     case ActionTypesEnum.SignUpSuccess:
       return {
         ...state,
+        authenticatedUser: action.authenticatedUser,
         authIsLoading: false,
         isAuthenticated: true,
-        authenticatedUser: action.authenticatedUser.user,
       }
     case ActionTypesEnum.SignOutFail:
       return {
         ...state,
-        isAuthenticated: true,
         authError: action.signOutError,
       }
     case ActionTypesEnum.SignOutSuccess:
       return {
         ...state,
-        isAuthenticated: false,
         authenticatedUser: null,
+        isAuthenticated: false,
       }
     default:
       return state;

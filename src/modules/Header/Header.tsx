@@ -1,8 +1,8 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import {Button, Dropdown, Menu} from 'antd';
+import {connect, ConnectedProps} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
-import {connect} from 'react-redux';
 
 import Logo from './logo.svg';
 import {signOut} from '../../store/actions/auth';
@@ -11,11 +11,27 @@ import {SignOutButton} from './SignOutButton';
 
 import modules from './Header.module.scss';
 
-interface IPropTypes {
-  authenticatedUser?: any;
-  signOut: (firebase: any) => any;
-  isAuthenticated: boolean;
+interface IRootStore {
+  auth: {
+    authenticatedUser: null | firebase.auth.UserCredential;
+    isAuthenticated: boolean;
+  }
 }
+
+const mapStateToProps = (state: IRootStore) => {
+  return {
+    authenticatedUser: state.auth.authenticatedUser,
+    isAuthenticated: state.auth.isAuthenticated,
+  }
+};
+
+const mapDispatchToProps = {signOut};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface IPropTypes extends PropsFromRedux {}
 
 class Header extends React.Component<IPropTypes> {
   onMenuButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,9 +45,10 @@ class Header extends React.Component<IPropTypes> {
 
         <Menu.Item key="2"><Link to={AppRoutesEnum.ADMIN}>Admin</Link></Menu.Item>
 
-        {this.props.authenticatedUser &&
+        {(this.props.authenticatedUser && this.props.authenticatedUser.user) &&
           <Menu.Item key="3">
-            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`}>Account</Link>
+            {this.props.authenticatedUser.user.uid}
+            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.user.uid}`}>Account</Link>
           </Menu.Item>
         }
 
@@ -67,13 +84,6 @@ class Header extends React.Component<IPropTypes> {
   }
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    authenticatedUser: state.auth.authenticatedUser,
-    isAuthenticated: state.auth.isAuthenticated,
-  }
-};
-
-const WrappedComponent = connect(mapStateToProps, {signOut})(Header);
+const WrappedComponent = connector(Header);
 
 export {WrappedComponent as Header}
