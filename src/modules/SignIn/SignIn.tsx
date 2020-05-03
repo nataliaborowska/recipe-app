@@ -6,8 +6,9 @@ import {Spin, Typography} from 'antd';
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
 import {IFirebase, withFirebase} from '../../components/Firebase';
-import {signIn} from '../../store/actions/auth';
+import {signIn} from '../../store/actions/authActions/auth';
 import {SignInForm} from './SignInForm';
+import {IStoreState} from '../../store/store';
 
 import modules from './SignIn.module.scss';
 
@@ -19,15 +20,7 @@ export interface IFormField {
   value?: string;
 }
 
-interface IRootStore {
-  auth: {
-    authError: null | string;
-    authIsLoading: boolean;
-    isAuthenticated: boolean;
-  }
-}
-
-const mapStateToProps = (state: IRootStore) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     authenticationError: state.auth.authError,
     authenticationIsLoading: state.auth.authIsLoading,

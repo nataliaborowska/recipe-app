@@ -7,8 +7,9 @@ import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
 import {IFirebase, withFirebase} from '../../components/Firebase';
 import {ResetPasswordForm} from './ResetPasswordForm';
-import {resetPassword, resetPasswordEnd, resetPasswordFail} from '../../store/actions/auth';
+import {resetPassword, resetPasswordEnd, resetPasswordFail} from '../../store/actions/authActions/auth';
 import {SuccessModal} from '../../common/SuccessModal';
+import {IStoreState} from '../../store/store';
 
 import modules from './ResetPassword.module.scss';
 
@@ -20,14 +21,7 @@ export interface IFormField {
   value?: string;
 }
 
-interface IRootStore {
-  auth: {
-    authError: null | string;
-    resetPasswordSuccess: boolean;
-  }
-}
-
-const mapStateToProps = (state: IRootStore) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     authenticationError: state.auth.authError,
     resetPasswordSuccess: state.auth.resetPasswordSuccess,

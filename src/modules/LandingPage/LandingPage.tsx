@@ -12,6 +12,8 @@ export const LandingPage: React.FC = () => (
     <p>{'https://firebase.google.com/docs/reference/js/firebase.database.Database#ref'}</p>
     <p>{'https://www.bennadel.com/blog/3320-using-firebase-4-with-typescript-type-declarations-and-npm.htm'}</p>
     <p>{'https://redux.js.org/recipes/usage-with-typescript'}</p>
+    <p>{'https://itnext.io/hooking-up-firebase-to-your-redux-store-a5e799cf84c4'}</p>
+    <p>{'https://stackoverflow.com/questions/28822054/firebase-how-to-generate-a-unique-numeric-id-for-key'}</p>
     <p>About strinct null checks, answer of Rick Love {'https://stackoverflow.com/questions/12787781/type-definition-in-object-literal-in-typescript'}</p>
   </div>
 );

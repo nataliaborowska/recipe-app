@@ -1,80 +1,63 @@
-import React from 'react';
-import {Col, Row, Typography} from 'antd';
+import React, {Props} from 'react';
+import {Col, Row, Typography, Spin} from 'antd';
+import {connect, ConnectedProps} from 'react-redux';
 
 import {RecipeCard} from './RecipeCard';
 import {withAuthorization} from '../../common/withAuthorization';
+import {fetchRecipesList} from '../../store/actions/recipeActions/recipe';
+import {IStoreState} from '../../store/store';
+import {withFirebase, IFirebase} from '../../components/Firebase';
 
 import styles from './RecipesList.module.scss';
 
-const RecipesList: React.FC = () => {
-  const recipes = [
-    {
-      description: 'This is a description',
-      id: '1',
-      title: 'This is a test recipe',
-      image: './src-to-image',
-      ingredients: ['ing1', 'ing2', 'ing3'],
-      instructions: 'some instructions',
-      servings: 2,
-      preparationTime: '30 min',
-    },
-    {
-      description: 'This is a description2',
-      id: '1',
-      title: 'This is a test recipe2',
-      image: './src-to-image',
-      ingredients: ['ing1', 'ing2', 'ing3'],
-      instructions: 'some instructions',
-      servings: 2,
-      preparationTime: '30 min',
-    },
-    {
-      description: 'This is a description2',
-      id: '1',
-      title: 'This is a test recipe2',
-      image: './src-to-image',
-      ingredients: ['ing1', 'ing2', 'ing3'],
-      instructions: 'some instructions',
-      servings: 2,
-      preparationTime: '30 min',
-    },
-    {
-      description: 'This is a description2',
-      id: '1',
-      title: 'This is a test recipe2',
-      image: './src-to-image',
-      ingredients: ['ing1', 'ing2', 'ing3'],
-      instructions: 'some instructions',
-      servings: 2,
-      preparationTime: '30 min',
-    },
-    {
-      description: 'This is a description2',
-      id: '1',
-      title: 'This is a test recipe2',
-      image: './src-to-image',
-      ingredients: ['ing1', 'ing2', 'ing3'],
-      instructions: 'some instructions',
-      servings: 2,
-      preparationTime: '30 min',
-    },
-  ];
-
-  return (
-    <div className={styles.recipesList}>
-      <Typography.Title>Recipes List</Typography.Title>
-
-      <Row gutter={16}>
-        {recipes.map(recipe => (
-          <Col span={6}>
-            <RecipeCard {...recipe} />
-          </Col>
-        ))}
-      </Row>
-    </div>
-  );
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    recipesList: state.recipe.recipesList,
+    recipeIsLoading: state.recipe.recipeIsLoading,
+    recipeError: state.recipe.recipeError,
+  }
 }
 
-const WrappedComponent = withAuthorization(RecipesList);
+const mapDispatchToProps = {fetchRecipesList};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+interface IPropTypes extends PropsFromRedux {
+  firebase: IFirebase;
+}
+
+class RecipesList extends React.Component<IPropTypes>{
+  componentDidMount() {
+    this.props.fetchRecipesList(this.props.firebase);
+  }
+
+  render() {
+    if (this.props.recipeIsLoading) {
+      return <Spin />;
+    }
+
+    if (this.props.recipesList) {
+      return (
+        <div className={styles.recipesList}>
+          <Typography.Title>Recipes List</Typography.Title>
+
+          <Row gutter={16}>
+            {this.props.recipesList.map(recipe => (
+              <Col span={6}>
+                <RecipeCard {...recipe} />
+              </Col>
+            ))}
+          </Row>
+        </div>
+      );
+    }
+
+    return <Typography.Paragraph>There was a problem loading the data</Typography.Paragraph>;
+  }
+}
+
+const WrappedComponent = connector(withAuthorization(withFirebase(RecipesList)));
 
 export {WrappedComponent as RecipesList};

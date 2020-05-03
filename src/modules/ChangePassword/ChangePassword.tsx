@@ -9,7 +9,8 @@ import {IFirebase} from '../../components/Firebase';
 import {SuccessModal} from '../../common/SuccessModal';
 import {ChangePasswordForm} from './ChangePasswordForm';
 import {withFirebase} from '../../components/Firebase';
-import {changePassword, changePasswordEnd, changePasswordFail} from '../../store/actions/auth';
+import {changePassword, changePasswordEnd, changePasswordFail} from '../../store/actions/authActions/auth';
+import {IStoreState} from '../../store/store';
 
 import modules from './ChangePassword.module.scss';
 
@@ -21,15 +22,7 @@ export interface IFormField {
   value?: string;
 }
 
-interface IRootStore {
-  auth: {
-    authenticatedUser: null | firebase.auth.UserCredential;
-    authError: null | string;
-    changePasswordSuccess: boolean;
-  }
-}
-
-const mapStateToProps = (state: IRootStore) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     authenticatedUser: state.auth.authenticatedUser,
     authenticationError: state.auth.authError,

@@ -5,20 +5,14 @@ import {connect, ConnectedProps} from 'react-redux';
 import {UserOutlined} from '@ant-design/icons';
 
 import Logo from './logo.svg';
-import {signOut} from '../../store/actions/auth';
+import {signOut} from '../../store/actions/authActions/auth';
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {SignOutButton} from './SignOutButton';
+import {IStoreState} from '../../store/store';
 
 import modules from './Header.module.scss';
 
-interface IRootStore {
-  auth: {
-    authenticatedUser: null | firebase.auth.UserCredential;
-    isAuthenticated: boolean;
-  }
-}
-
-const mapStateToProps = (state: IRootStore) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     authenticatedUser: state.auth.authenticatedUser,
     isAuthenticated: state.auth.isAuthenticated,
@@ -43,16 +37,17 @@ class Header extends React.Component<IPropTypes> {
       <Menu>
         <Menu.Item key="1"><Link to={AppRoutesEnum.RECIPES_LIST}>Recipes</Link></Menu.Item>
 
-        <Menu.Item key="2"><Link to={AppRoutesEnum.ADMIN}>Admin</Link></Menu.Item>
+        <Menu.Item key="2"><Link to={AppRoutesEnum.CREATE_RECIPE}>Create Recipe</Link></Menu.Item>
+
+        <Menu.Item key="3"><Link to={AppRoutesEnum.ADMIN}>Admin</Link></Menu.Item>
 
         {(this.props.authenticatedUser && this.props.authenticatedUser.user) &&
-          <Menu.Item key="3">
-            {this.props.authenticatedUser.user.uid}
+          <Menu.Item key="4">
             <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.user.uid}`}>Account</Link>
           </Menu.Item>
         }
 
-        <Menu.Item key="4">
+        <Menu.Item key="5">
           <SignOutButton isAuthenticated={this.props.isAuthenticated} signOut={this.props.signOut} />
         </Menu.Item>
       </Menu>

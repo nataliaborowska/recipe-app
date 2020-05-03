@@ -6,8 +6,9 @@ import {Redirect} from 'react-router-dom';
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
 import {IFirebase, withFirebase} from '../../components/Firebase';
-import {signUp} from '../../store/actions/auth';
+import {signUp} from '../../store/actions/authActions/auth';
 import {SignUpForm} from './SignUpForm';
+import {IStoreState} from '../../store/store';
 
 import modules from './SignUp.module.scss';
 
@@ -19,15 +20,7 @@ export interface IFormField {
   value?: string;
 }
 
-interface IRootStore {
-  auth: {
-    authError: null | string;
-    authIsLoading: boolean;
-    isAuthenticated: boolean;
-  }
-}
-
-const mapStateToProps = (state: IRootStore) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     authenticationError: state.auth.authError,
     authenticationIsLoading: state.auth.authIsLoading,

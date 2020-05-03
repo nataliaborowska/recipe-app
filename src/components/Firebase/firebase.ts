@@ -2,9 +2,14 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
+import {IRecipeData} from '../../store/reducers/recipeReducer';
+
 export interface IFirebase {
   auth: firebase.auth.Auth;
+  createRecipe: (values: IRecipeData) => Promise<any>;
   database: firebase.database.Database;
+  recipe: (recipeId: string) => firebase.database.Reference;
+  recipes: () => firebase.database.Reference;
   createUserWithEmailAndPassword: (email: string, password: string) => Promise<firebase.auth.UserCredential>;
   signInWithEmailAndPassword: (email: string, password: string) => Promise<firebase.auth.UserCredential>;
   signOut: () => Promise<void>;
@@ -70,4 +75,20 @@ export class Firebase implements IFirebase {
   //User API
   user = (uid: string) => this.database.ref(`users/${uid}`);
   users = () => this.database.ref('users');
+
+  //Recipe APi
+  createRecipe = (values: IRecipeData) => {
+    return this.database.ref('recipes/').push({
+      calories: values.calories,
+      description: values.description,
+      ingredients: values.ingredients,
+      instructions: values.instructions,
+      name: values.name,
+      preparationTime: values.preparationTime,
+      servings: values.servings,
+    });
+  }
+
+  recipe = (recipeId: string) => this.database.ref(`recipes/${recipeId}`);
+  recipes = () => this.database.ref('/recipes');
 }

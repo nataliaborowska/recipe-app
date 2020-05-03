@@ -6,6 +6,7 @@ import {Account} from './modules/Account';
 import {Admin} from './modules/Admin';
 import {AppRoutesEnum} from './utils/AppRoutesEnum';
 import {ChangePassword} from './modules/ChangePassword';
+import {CreateRecipe} from './modules/CreateRecipe';
 import {Header} from './modules/Header';
 import {LandingPage} from './modules/LandingPage';
 import {Recipe} from './modules/Recipe';
@@ -25,9 +26,10 @@ function App() {
           <Switch>
             <Route exact component={LandingPage} path={AppRoutesEnum.LANDING_PAGE} />
             <Route exact component={RecipesList} path={AppRoutesEnum.RECIPES_LIST} />
-            <Route exact component={Recipe} path={AppRoutesEnum.RECIPE} />
+            <Route exact component={Recipe} path={`${AppRoutesEnum.RECIPE}/:recipeId`} />
             <Route exact component={Admin} path={AppRoutesEnum.ADMIN} />
             <Route exact component={ChangePassword} path={AppRoutesEnum.CHANGE_PASSWORD} />
+            <Route exact component={CreateRecipe} path={AppRoutesEnum.CREATE_RECIPE} />
             <Route exact component={ResetPassword} path={AppRoutesEnum.RESET_PASSWORD} />
             <Route exact component={SignIn} path={AppRoutesEnum.SIGN_IN} />
             <Route exact component={SignUp} path={AppRoutesEnum.SIGN_UP} />

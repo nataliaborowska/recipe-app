@@ -2,7 +2,7 @@ import React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import {List, Spin, Typography} from 'antd';
 
-import {fetchUsersList, removeUsersList} from '../../store/actions/auth';
+import {fetchUsersList, removeUsersList} from '../../store/actions/authActions/auth';
 import {IFirebase} from '../../components/Firebase';
 import {IUser} from '../../store/reducers/authReducer';
 import {withAuthorization} from '../../common/withAuthorization';

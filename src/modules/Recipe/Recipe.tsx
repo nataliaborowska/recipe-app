@@ -1,107 +1,124 @@
 import React from 'react';
-import {useParams} from 'react-router-dom';
-import {Col, Divider, Rate, Row, Statistic, Typography} from 'antd';
+import {withRouter, RouteComponentProps} from 'react-router-dom';
+import {Col, Divider, Rate, Row, Statistic, Typography, Spin} from 'antd';
+import {connect, ConnectedProps} from 'react-redux';
 
 import {withAuthorization} from '../../common/withAuthorization';
+import {IFirebase, withFirebase} from '../../components/Firebase';
+import {fetchRecipeData} from '../../store/actions/recipeActions/recipe';
+import {IStoreState} from '../../store/store';
 
 import styles from './Recipe.module.scss';
 
-const Recipe: React.FC = () => {
-  const {recipeId} = useParams();
-  const recipe = {
-    description: 'Mauris quis tempor metus. Sed in magna purus. Suspendisse non nibh nec arcu semper venenatis eget sed erat. Fusce vitae rutrum arcu. Integer sed ipsum in diam scelerisque ultrices. Sed mollis consectetur tellus id consequat. Fusce scelerisque massa vel turpis sollicitudin, a ullamcorper urna tempor. Maecenas sit amet commodo ligula. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam fringilla lacus vel lectus consequat, et tincidunt est rutrum. Donec non mi leo.',
-    id: '1',
-    title: 'This is a test recipe',
-    image: 'https://www.stevensegallery.com/640/360',
-    ingredients: ['ing1', 'ing2', 'ing3'],
-    instructions: 'some instructions',
-    servings: 2,
-    preparationTime: '30 min',
-    rating: 3,
-    calories: 800,
-    tags: ['Italian', 'Baking'],
-    directions: [
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      'Etiam sit amet felis in risus facilisis rutrum.',
-      'Quisque malesuada, est ac tincidunt malesuada, turpis mauris lacinia augue, ac fermentum odio odio ut risus.',
-      'Cras a augue eu metus placerat eleifend ultrices malesuada nisl.',
-      'Nullam at dignissim sapien.',
-      'Vestibulum ut posuere libero.',
-      'Donec at mollis sem, a tristique metus.Nullam id condimentum nunc, sit amet bibendum nisl.',
-      'Integer nec orci tellus.',
-    ]
+const mapStateToProps = (state: IStoreState) => {
+  return {
+    recipeData: state.recipe.recipeData,
+    recipeIsLoading: state.recipe.recipeIsLoading,
+    recipeError: state.recipe.recipeError,
   };
+}
 
-  return (
-    <div className={styles.recipeWrapper}>
-      <Row gutter={16}>
-        <Col span={12}>
-          <Typography.Title>{recipe.title}</Typography.Title>
+const mapDispatchToProps = {fetchRecipeData};
 
-          <span className={styles.recipeRating}>
-            <Rate value={recipe.rating} />
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
-            ({recipe.rating})
-          </span>
+type PropsFromRedux = ConnectedProps<typeof connector>;
 
-          <Typography.Paragraph ellipsis={{rows: 4, expandable: true}}>
-            {recipe.description}
-          </Typography.Paragraph>
+interface IMatchParams {
+  recipeId: string;
+}
 
-          <Row className={styles.recipeStats} gutter={8}>
-            <Col span={8} className={styles.recipeData}>
-              <Statistic
-                title="ingredients"
-                value={recipe.ingredients.length}
-              />
+interface IPropTypes extends PropsFromRedux, RouteComponentProps<IMatchParams> {
+  firebase: IFirebase;
+}
+
+class Recipe extends React.Component<IPropTypes> {
+  componentDidMount() {
+    const {recipeId} = this.props.match.params;
+
+    this.props.fetchRecipeData(recipeId, this.props.firebase);
+  }
+
+  render() {
+    if (this.props.recipeIsLoading) {
+      return <Spin />;
+    }
+
+    if (this.props.recipeData) {
+      return (
+        <div className={styles.recipeWrapper}>
+          <Row gutter={16}>
+            <Col span={12}>
+              <Typography.Title>{this.props.recipeData.title}</Typography.Title>
+
+              {/* <span className={styles.recipeRating}>
+                <Rate value={this.props.recipeData.rating} />
+
+                ({this.props.recipeData.rating})
+              </span> */}
+
+              <Typography.Paragraph ellipsis={{rows: 4, expandable: true}}>
+                {this.props.recipeData.description}
+              </Typography.Paragraph>
+
+              <Row className={styles.recipeStats} gutter={8}>
+                <Col span={8} className={styles.recipeData}>
+                  <Statistic
+                    title="ingredients"
+                    value={this.props.recipeData.ingredients.length}
+                  />
+                </Col>
+
+                <Col span={8} className={styles.recipeData}>
+                  <Statistic
+                    title="prep time"
+                    value={this.props.recipeData.preparationTime}
+                  />
+                </Col>
+
+                <Col span={8} className={styles.recipeData}>
+                  <Statistic
+                    title="Calories"
+                    value={this.props.recipeData.calories}
+                  />
+                </Col>
+              </Row>
             </Col>
 
-            <Col span={8} className={styles.recipeData}>
-              <Statistic
-                title="prep time"
-                value={recipe.preparationTime}
-              />
-            </Col>
-
-            <Col span={8} className={styles.recipeData}>
-              <Statistic
-                title="Calories"
-                value={recipe.calories}
+            <Col span={12}>
+              <img
+                alt={this.props.recipeData.title}
+                className={styles.recipeImage}
+                src={this.props.recipeData.image}
               />
             </Col>
           </Row>
-        </Col>
 
-        <Col span={12}>
-          <img
-            alt={recipe.title}
-            className={styles.recipeImage}
-            src={recipe.image}
-          />
-        </Col>
-      </Row>
+          <Divider />
 
-      <Divider />
+          <Typography.Title level={2}>Ingredients ({this.props.recipeData.servings} servings)</Typography.Title>
 
-      <Typography.Title level={2}>Ingredients ({recipe.servings} servings)</Typography.Title>
+          <ul className={styles.ingredientsList}>
+            {this.props.recipeData.ingredients.map((ingredient: string) => (
+              <li className={styles.ingredientsListItem}>{ingredient}</li>
+            ))}
+          </ul>
 
-      <ul className={styles.ingredientsList}>
-        {recipe.ingredients.map(ingredient => (
-          <li className={styles.ingredientsListItem}>{ingredient}</li>
-        ))}
-      </ul>
+          <Typography.Title level={2}>Directions</Typography.Title>
 
-      <Typography.Title level={2}>Directions</Typography.Title>
+          <ol className={styles.directionsList}>
+            {this.props.recipeData.instructions.map((instruction: string) => (
+              <li className={styles.directionsListItem}>{instruction}</li>
+            ))}
+          </ol>
+        </div>
+      );
+    }
 
-      <ol className={styles.directionsList}>
-        {recipe.directions.map(direction => (
-          <li className={styles.directionsListItem}>{direction}</li>
-        ))}
-      </ol>
-    </div>
-  );
+    return <Typography.Paragraph>There was a problem loading the data</Typography.Paragraph>;
+  }
 }
 
-const WrappedComponent = withAuthorization(Recipe);
+const WrappedComponent = connector(withAuthorization(withFirebase(withRouter(Recipe))));
 
 export {WrappedComponent as Recipe};

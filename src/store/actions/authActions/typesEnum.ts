@@ -1,4 +1,4 @@
-export enum ActionTypesEnum {
+export enum AuthActionTypesEnum {
   ChangePasswordEnd,
   ChangePasswordFail,
   ChangePasswordStart,

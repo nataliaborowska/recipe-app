@@ -4,14 +4,9 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {IFirebase, withFirebase} from '../../components/Firebase';
+import {IStoreState} from '../../store/store';
 
-interface IRootStore {
-  auth: {
-    isAuthenticated: boolean;
-  }
-}
-
-const mapStateToProps = (state: IRootStore) => {
+const mapStateToProps = (state: IStoreState) => {
   return {
     isAuthenticated: state.auth.isAuthenticated,
   }
