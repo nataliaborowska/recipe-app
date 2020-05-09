@@ -3,87 +3,87 @@ import {IUser} from '../../reducers/authReducer';
 
 //action types
 export interface ChangePasswordEndAction {
-  type: AuthActionTypesEnum.ChangePasswordEnd;
+  type: AuthActionTypesEnum.CHANGE_PASSWORD_END;
 }
 
 export interface ChangePasswordFailAction {
-  type: AuthActionTypesEnum.ChangePasswordFail;
+  type: AuthActionTypesEnum.CHANGE_PASSWORD_FAIL;
   authError: string;
 }
 
 export interface ChangePasswordStartAction {
-  type: AuthActionTypesEnum.ChangePasswordStart;
+  type: AuthActionTypesEnum.CHANGE_PASSWORD_START;
 }
 
 export interface ChangePasswordSuccessAction {
-  type: AuthActionTypesEnum.ChangePasswordSuccess;
+  type: AuthActionTypesEnum.CHANGE_PASSWORD_SUCCESS;
 }
 
 export interface FetchUsersFailAction {
-  type: AuthActionTypesEnum.FetchUsersFail,
+  type: AuthActionTypesEnum.FETCH_USERS_FAIL,
 }
 
 export interface FetchUsersStartAction {
-  type: AuthActionTypesEnum.FetchUsersStart,
+  type: AuthActionTypesEnum.FETCH_USERS_START,
 }
 
 export interface FetchUsersSuccessAction {
-  type: AuthActionTypesEnum.FetchUsersSuccess,
+  type: AuthActionTypesEnum.FETCH_USERS_SUCCESS,
   usersList: Array<IUser>
 }
 
 export interface RemoveUsersListEndAction {
-  type: AuthActionTypesEnum.RemoveUsersListEnd,
+  type: AuthActionTypesEnum.REMOVE_USERS_LIST_END,
 }
 
 export interface ResetPasswordEndAction {
-  type: AuthActionTypesEnum.ResetPasswordEnd,
+  type: AuthActionTypesEnum.RESET_PASSWORD_END,
 }
 
 export interface ResetPasswordFailAction {
-  type: AuthActionTypesEnum.ResetPasswordFail;
+  type: AuthActionTypesEnum.RESET_PASSWORD_FAIL;
   authError: string;
 }
 
 export interface ResetPasswordSuccessAction {
-  type: AuthActionTypesEnum.ResetPasswordSuccess;
+  type: AuthActionTypesEnum.RESET_PASSWORD_SUCCESS;
 }
 
 export interface SignInStartAction {
-  type: AuthActionTypesEnum.SignInStart;
+  type: AuthActionTypesEnum.SIGN_IN_START;
 }
 
 export interface SignInSuccessAction {
-  type: AuthActionTypesEnum.SignInSuccess;
+  type: AuthActionTypesEnum.SIGN_IN_SUCCESS;
   authenticatedUser: firebase.auth.UserCredential;
 }
 
 export interface SignInFailAction {
-  type: AuthActionTypesEnum.SignInFail;
+  type: AuthActionTypesEnum.SIGN_IN_FAIL;
   authError: string;
 }
 
 export interface SignOutFailAction {
-  type: AuthActionTypesEnum.SignOutFail;
+  type: AuthActionTypesEnum.SIGN_OUT_FAIL;
   signOutError: string;
 }
 
 export interface SignOutSuccessAction {
-  type: AuthActionTypesEnum.SignOutSuccess;
+  type: AuthActionTypesEnum.SIGN_OUT_SUCCESS;
   authenticatedUser: null;
 }
 
 export interface SignUpStartAction {
-  type: AuthActionTypesEnum.SignUpStart;
+  type: AuthActionTypesEnum.SIGN_UP_START;
 }
 
 export interface SignUpSuccessAction {
-  type: AuthActionTypesEnum.SignUpSuccess;
+  type: AuthActionTypesEnum.SIGN_UP_SUCCESS;
   authenticatedUser: firebase.auth.UserCredential;
 }
 
 export interface SignUpFailAction {
-  type: AuthActionTypesEnum.SignUpFail;
+  type: AuthActionTypesEnum.SIGN_UP_FAIL;
   authError: string;
 }
 

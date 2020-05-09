@@ -7,6 +7,7 @@ import {Admin} from './modules/Admin';
 import {AppRoutesEnum} from './utils/AppRoutesEnum';
 import {ChangePassword} from './modules/ChangePassword';
 import {CreateRecipe} from './modules/CreateRecipe';
+import {EditRecipe} from './modules/EditRecipe';
 import {Header} from './modules/Header';
 import {LandingPage} from './modules/LandingPage';
 import {Recipe} from './modules/Recipe';
@@ -30,6 +31,7 @@ function App() {
             <Route exact component={Admin} path={AppRoutesEnum.ADMIN} />
             <Route exact component={ChangePassword} path={AppRoutesEnum.CHANGE_PASSWORD} />
             <Route exact component={CreateRecipe} path={AppRoutesEnum.CREATE_RECIPE} />
+            <Route exact component={EditRecipe} path={`${AppRoutesEnum.EDIT_RECIPE}/:recipeId`} />
             <Route exact component={ResetPassword} path={AppRoutesEnum.RESET_PASSWORD} />
             <Route exact component={SignIn} path={AppRoutesEnum.SIGN_IN} />
             <Route exact component={SignUp} path={AppRoutesEnum.SIGN_UP} />

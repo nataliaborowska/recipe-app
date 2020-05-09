@@ -30,7 +30,7 @@ import {
 export const changePassword = (passwordNew: string, firebase: IFirebase): AppThunk => {
   return async (dispatch: Dispatch) => {
     dispatch<ChangePasswordStartAction>({
-      type: AuthActionTypesEnum.ChangePasswordStart,
+      type: AuthActionTypesEnum.CHANGE_PASSWORD_START,
     });
     try {
       if (firebase.passwordUpdate) {
@@ -38,7 +38,7 @@ export const changePassword = (passwordNew: string, firebase: IFirebase): AppThu
       }
 
       dispatch<ChangePasswordSuccessAction>({
-        type: AuthActionTypesEnum.ChangePasswordSuccess,
+        type: AuthActionTypesEnum.CHANGE_PASSWORD_SUCCESS,
       });
     } catch (error) {
       dispatch<ChangePasswordFailAction>(changePasswordFail(error.message));
@@ -48,13 +48,13 @@ export const changePassword = (passwordNew: string, firebase: IFirebase): AppThu
 
 export const changePasswordEnd = (): ChangePasswordEndAction => {
   return {
-    type: AuthActionTypesEnum.ChangePasswordEnd,
+    type: AuthActionTypesEnum.CHANGE_PASSWORD_END,
   }
 }
 
 export const changePasswordFail = (error: string): ChangePasswordFailAction => {
   return {
-    type: AuthActionTypesEnum.ChangePasswordFail,
+    type: AuthActionTypesEnum.CHANGE_PASSWORD_FAIL,
     authError: error,
   }
 }
@@ -62,7 +62,7 @@ export const changePasswordFail = (error: string): ChangePasswordFailAction => {
 export const fetchUsersList = (firebase: IFirebase): AppThunk => {
   return async (dispatch: Dispatch) => {
     dispatch<FetchUsersStartAction>({
-      type: AuthActionTypesEnum.FetchUsersStart,
+      type: AuthActionTypesEnum.FETCH_USERS_START,
     });
 
     try {
@@ -76,13 +76,13 @@ export const fetchUsersList = (firebase: IFirebase): AppThunk => {
         });
 
         dispatch<FetchUsersSuccessAction>({
-          type: AuthActionTypesEnum.FetchUsersSuccess,
+          type: AuthActionTypesEnum.FETCH_USERS_SUCCESS,
           usersList: usersList,
         });
       });
     } catch (error) {
       dispatch<FetchUsersFailAction>({
-        type: AuthActionTypesEnum.FetchUsersFail,
+        type: AuthActionTypesEnum.FETCH_USERS_FAIL,
       });
     }
   }
@@ -96,7 +96,7 @@ export const removeUsersList = (firebase: IFirebase): AppThunk => {
       throw (error);
     } finally {
       dispatch<RemoveUsersListEndAction>({
-        type: AuthActionTypesEnum.RemoveUsersListEnd,
+        type: AuthActionTypesEnum.REMOVE_USERS_LIST_END,
       });
     }
   }
@@ -108,7 +108,7 @@ export const resetPassword = (email: string, firebase: IFirebase): AppThunk => {
       await firebase.passwordReset(email);
 
       dispatch<ResetPasswordSuccessAction>({
-        type: AuthActionTypesEnum.ResetPasswordSuccess,
+        type: AuthActionTypesEnum.RESET_PASSWORD_SUCCESS,
       });
 
     } catch (error) {
@@ -119,13 +119,13 @@ export const resetPassword = (email: string, firebase: IFirebase): AppThunk => {
 
 export const resetPasswordEnd = (): ResetPasswordEndAction => {
   return {
-    type: AuthActionTypesEnum.ResetPasswordEnd,
+    type: AuthActionTypesEnum.RESET_PASSWORD_END,
   }
 }
 
 export const resetPasswordFail = (error: string): ResetPasswordFailAction => {
   return {
-    type: AuthActionTypesEnum.ResetPasswordFail,
+    type: AuthActionTypesEnum.RESET_PASSWORD_FAIL,
     authError: error,
   }
 }
@@ -143,12 +143,12 @@ export const saveUserToDatabase = (
         .set({email, username});
 
       dispatch<SignUpSuccessAction>({
-        type: AuthActionTypesEnum.SignUpSuccess,
+        type: AuthActionTypesEnum.SIGN_UP_SUCCESS,
         authenticatedUser: authenticatedUser,
       });
     } catch (error) {
       dispatch<SignUpFailAction>({
-        type: AuthActionTypesEnum.SignUpFail,
+        type: AuthActionTypesEnum.SIGN_UP_FAIL,
         authError: error.message,
       });
     }
@@ -158,19 +158,19 @@ export const saveUserToDatabase = (
 export const signIn = (email: string, password: string, firebase: IFirebase): AppThunk => {
   return async (dispatch: Dispatch) => {
     dispatch<SignInStartAction>({
-      type: AuthActionTypesEnum.SignInStart,
+      type: AuthActionTypesEnum.SIGN_IN_START,
     });
 
     try {
       const authenticatedUser = await firebase.signInWithEmailAndPassword(email, password);
 
       dispatch<SignInSuccessAction>({
-        type: AuthActionTypesEnum.SignInSuccess,
+        type: AuthActionTypesEnum.SIGN_IN_SUCCESS,
         authenticatedUser: authenticatedUser,
       });
     } catch (error) {
       dispatch<SignInFailAction>({
-        type: AuthActionTypesEnum.SignInFail,
+        type: AuthActionTypesEnum.SIGN_IN_FAIL,
         authError: error.message,
       });
     }
@@ -183,12 +183,12 @@ export const signOut = (firebase: IFirebase): AppThunk => {
       await firebase.signOut();
 
       dispatch<SignOutSuccessAction>({
-        type: AuthActionTypesEnum.SignOutSuccess,
+        type: AuthActionTypesEnum.SIGN_OUT_SUCCESS,
         authenticatedUser: null,
       });
     } catch (error) {
       dispatch<SignOutFailAction>({
-        type: AuthActionTypesEnum.SignOutFail,
+        type: AuthActionTypesEnum.SIGN_OUT_FAIL,
         signOutError: error.message,
       });
     }
@@ -203,7 +203,7 @@ export const signUp = (
 ): AppThunk => {
   return async (dispatch: Dispatch) => {
     dispatch<SignUpStartAction>({
-      type: AuthActionTypesEnum.SignUpStart,
+      type: AuthActionTypesEnum.SIGN_UP_START,
     });
 
     try {
@@ -212,7 +212,7 @@ export const signUp = (
       dispatch<any>(saveUserToDatabase(email, username, authenticatedUser, firebase))
     } catch (error) {
       dispatch<SignUpFailAction>({
-        type: AuthActionTypesEnum.SignUpFail,
+        type: AuthActionTypesEnum.SIGN_UP_FAIL,
         authError: error.message,
       });
     }

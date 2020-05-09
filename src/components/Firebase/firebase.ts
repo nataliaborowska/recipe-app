@@ -7,6 +7,7 @@ import {IRecipeData} from '../../store/reducers/recipeReducer';
 export interface IFirebase {
   auth: firebase.auth.Auth;
   createRecipe: (values: IRecipeData) => Promise<any>;
+  updateRecipe: (values: IRecipeData) => Promise<any>;
   database: firebase.database.Database;
   recipe: (recipeId: string) => firebase.database.Reference;
   recipes: () => firebase.database.Reference;
@@ -79,6 +80,18 @@ export class Firebase implements IFirebase {
   //Recipe APi
   createRecipe = (values: IRecipeData) => {
     return this.database.ref('recipes/').push({
+      calories: values.calories,
+      description: values.description,
+      ingredients: values.ingredients,
+      instructions: values.instructions,
+      name: values.name,
+      preparationTime: values.preparationTime,
+      servings: values.servings,
+    });
+  }
+
+  updateRecipe = (values: IRecipeData) => {
+    return this.database.ref('recipes/').update({
       calories: values.calories,
       description: values.description,
       ingredients: values.ingredients,

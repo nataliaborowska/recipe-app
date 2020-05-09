@@ -43,8 +43,12 @@ export const withAuthorization = (Component: any) => {
 
     checkIfUserAuthenticated() {
       this.firebaseListener = this.props.firebase.auth.onAuthStateChanged((authUser: any) => {
+        console.warn('is this valid', authUser);
+
         if (authUser === null) {
           this.props.history.push(AppRoutesEnum.SIGN_IN);
+        } else {
+
         }
       });
     }

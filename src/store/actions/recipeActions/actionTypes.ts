@@ -19,6 +19,24 @@ export interface CreateRecipeEndAction {
   type: RecipeActionTypesEnum.CREATE_RECIPE_END;
 }
 
+export interface EditRecipeStartAction {
+  type: RecipeActionTypesEnum.EDIT_RECIPE_START;
+}
+
+export interface EditRecipeFailAction {
+  type: RecipeActionTypesEnum.EDIT_RECIPE_FAIL;
+  recipeError: string;
+}
+
+export interface EditRecipeSuccessAction {
+  type: RecipeActionTypesEnum.EDIT_RECIPE_SUCCESS;
+  recipeId: string;
+}
+
+export interface EditRecipeEndAction {
+  type: RecipeActionTypesEnum.EDIT_RECIPE_END;
+}
+
 export interface FetchRecipeStartAction {
   type: RecipeActionTypesEnum.FETCH_RECIPE_START;
 }
@@ -47,6 +65,12 @@ export interface FetchRecipesListFailAction {
   recipeError: string;
 }
 
+export interface RemoveRecipesListEndAction {
+  type: RecipeActionTypesEnum.REMOVE_RECIPES_LIST_END;
+}
+
 export type RecipeActionType = CreateRecipeStartAction | CreateRecipeFailAction | CreateRecipeSuccessAction
-  | CreateRecipeEndAction | FetchRecipeStartAction | FetchRecipeSuccessAction | FetchRecipeFailAction
-  | FetchRecipesListStartAction | FetchRecipesListSuccessAction | FetchRecipesListFailAction;
+  | CreateRecipeEndAction | EditRecipeStartAction | EditRecipeFailAction | EditRecipeSuccessAction
+  | EditRecipeEndAction | FetchRecipeStartAction | FetchRecipeSuccessAction | FetchRecipeFailAction
+  | FetchRecipesListStartAction | FetchRecipesListSuccessAction | FetchRecipesListFailAction
+  | RemoveRecipesListEndAction;

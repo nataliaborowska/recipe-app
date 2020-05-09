@@ -11,11 +11,9 @@ interface IPropTypes {
 }
 
 const SignOutButton: React.FC<IPropTypes> = (props) => {
-  const signOut = () => {
-    props.signOut(props.firebase);
-  }
-
-  return <Button onClick={signOut}>SIGN OUT</Button>
+  return <Button onClick={() => {
+    props.signOut(props.firebase)
+  }}>SIGN OUT</Button>
 }
 
 const WrappedComponent = withFirebase(SignOutButton);

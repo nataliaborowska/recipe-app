@@ -91,7 +91,6 @@ class SignIn extends React.Component<IPropTypes, IState> {
     }
 
     return (
-
       <div className={modules.signIn}>
         <Typography.Title>Sign In</Typography.Title>
 

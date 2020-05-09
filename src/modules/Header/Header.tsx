@@ -41,9 +41,9 @@ class Header extends React.Component<IPropTypes> {
 
         <Menu.Item key="3"><Link to={AppRoutesEnum.ADMIN}>Admin</Link></Menu.Item>
 
-        {(this.props.authenticatedUser && this.props.authenticatedUser.user) &&
+        {this.props.authenticatedUser &&
           <Menu.Item key="4">
-            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.user.uid}`}>Account</Link>
+            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`}>Account</Link>
           </Menu.Item>
         }
 

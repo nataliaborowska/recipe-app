@@ -4,7 +4,7 @@ import {connect, ConnectedProps} from 'react-redux';
 
 import {RecipeCard} from './RecipeCard';
 import {withAuthorization} from '../../common/withAuthorization';
-import {fetchRecipesList} from '../../store/actions/recipeActions/recipe';
+import {fetchRecipesList, removeRecipesList} from '../../store/actions/recipeActions/recipe';
 import {IStoreState} from '../../store/store';
 import {withFirebase, IFirebase} from '../../components/Firebase';
 
@@ -18,7 +18,7 @@ const mapStateToProps = (state: IStoreState) => {
   }
 }
 
-const mapDispatchToProps = {fetchRecipesList};
+const mapDispatchToProps = {fetchRecipesList, removeRecipesList};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -28,9 +28,13 @@ interface IPropTypes extends PropsFromRedux {
   firebase: IFirebase;
 }
 
-class RecipesList extends React.Component<IPropTypes>{
+class RecipesList extends React.Component<IPropTypes> {
   componentDidMount() {
     this.props.fetchRecipesList(this.props.firebase);
+  }
+
+  componentWillUnmount() {
+    this.props.removeRecipesList(this.props.firebase);
   }
 
   render() {
@@ -38,7 +42,7 @@ class RecipesList extends React.Component<IPropTypes>{
       return <Spin />;
     }
 
-    if (this.props.recipesList) {
+    if (this.props.recipesList.length > 0) {
       return (
         <div className={styles.recipesList}>
           <Typography.Title>Recipes List</Typography.Title>

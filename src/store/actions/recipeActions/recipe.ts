@@ -10,12 +10,17 @@ import {
   CreateRecipeSuccessAction,
   CreateRecipeStartAction,
   CreateRecipeFailAction,
+  EditRecipeEndAction,
+  EditRecipeSuccessAction,
+  EditRecipeStartAction,
+  EditRecipeFailAction,
   FetchRecipeFailAction,
   FetchRecipeStartAction,
   FetchRecipeSuccessAction,
   FetchRecipesListFailAction,
   FetchRecipesListStartAction,
-  FetchRecipesListSuccessAction
+  FetchRecipesListSuccessAction,
+  RemoveRecipesListEndAction,
 } from './actionTypes';
 
 //action creators
@@ -48,6 +53,39 @@ export const createRecipe = (values: IRecipeData, firebase: IFirebase): AppThunk
 
     } catch (error) {
       dispatch<CreateRecipeFailAction>(createRecipeFail(error.message))
+    }
+  }
+}
+
+export const editRecipeEnd = (): EditRecipeEndAction => {
+  return {
+    type: RecipeActionTypesEnum.EDIT_RECIPE_END,
+  }
+}
+
+export const editRecipeFail = (error: string): EditRecipeFailAction => {
+  return {
+    type: RecipeActionTypesEnum.EDIT_RECIPE_FAIL,
+    recipeError: error
+  }
+}
+
+export const editRecipe = (values: IRecipeData, firebase: IFirebase): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    dispatch<EditRecipeStartAction>({
+      type: RecipeActionTypesEnum.EDIT_RECIPE_START,
+    });
+
+    try {
+      const recipeData = await firebase.updateRecipe(values);
+
+      dispatch<EditRecipeSuccessAction>({
+        type: RecipeActionTypesEnum.EDIT_RECIPE_SUCCESS,
+        recipeId: recipeData.key,
+      })
+
+    } catch (error) {
+      dispatch<EditRecipeFailAction>(editRecipeFail(error.message))
     }
   }
 }
@@ -101,6 +139,20 @@ export const fetchRecipesList = (firebase: IFirebase): AppThunk => {
       dispatch<FetchRecipesListFailAction>({
         type: RecipeActionTypesEnum.FETCH_RECIPES_LIST_FAIL,
         recipeError: error,
+      });
+    }
+  }
+}
+
+export const removeRecipesList = (firebase: IFirebase): AppThunk => {
+  return async (dispatch: Dispatch) => {
+    try {
+      await firebase.recipes().off();
+    } catch (error) {
+      throw (error);
+    } finally {
+      dispatch<RemoveRecipesListEndAction>({
+        type: RecipeActionTypesEnum.REMOVE_RECIPES_LIST_END,
       });
     }
   }

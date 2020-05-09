@@ -1,5 +1,3 @@
-import firebase, {auth} from 'firebase';
-
 import {RecipeActionType} from '../actions/recipeActions/actionTypes';
 import {RecipeActionTypesEnum} from '../actions/recipeActions/typesEnum';
 
@@ -35,18 +33,21 @@ const initialState: IRecipeState = {
 export const recipeReducer = (state = initialState, action: RecipeActionType): IRecipeState => {
   switch (action.type) {
     case RecipeActionTypesEnum.CREATE_RECIPE_END:
+    case RecipeActionTypesEnum.EDIT_RECIPE_END:
       return {
         ...state,
         recipeError: null,
         recipeSuccess: false,
       }
     case RecipeActionTypesEnum.CREATE_RECIPE_FAIL:
+    case RecipeActionTypesEnum.EDIT_RECIPE_FAIL:
       return {
         ...state,
         recipeError: action.recipeError,
         recipeIsLoading: false,
       }
     case RecipeActionTypesEnum.CREATE_RECIPE_SUCCESS:
+    case RecipeActionTypesEnum.EDIT_RECIPE_SUCCESS:
       return {
         ...state,
         recipeError: null,
@@ -55,6 +56,7 @@ export const recipeReducer = (state = initialState, action: RecipeActionType): I
         recipeSuccess: true,
       }
     case RecipeActionTypesEnum.CREATE_RECIPE_START:
+    case RecipeActionTypesEnum.EDIT_RECIPE_START:
       return {
         ...state,
         recipeError: null,
@@ -91,6 +93,11 @@ export const recipeReducer = (state = initialState, action: RecipeActionType): I
       return {
         ...state,
         recipeError: action.recipeError,
+      }
+    case RecipeActionTypesEnum.REMOVE_RECIPES_LIST_END:
+      return {
+        ...state,
+        recipesList: [],
       }
     default:
       return state;

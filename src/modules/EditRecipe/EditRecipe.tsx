@@ -3,16 +3,18 @@ import {connect, ConnectedProps} from 'react-redux';
 import {Typography} from 'antd';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 
+import {EditRecipeForm} from './EditRecipeForm';
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {ErrorModal} from '../../common/ErrorModal';
 import {IFirebase} from '../../components/Firebase';
 import {SuccessModal} from '../../common/SuccessModal';
-import {ChangePasswordForm} from './ChangePasswordForm';
 import {withFirebase} from '../../components/Firebase';
-import {changePassword, changePasswordEnd, changePasswordFail} from '../../store/actions/authActions/auth';
+import {editRecipe, editRecipeEnd, editRecipeFail} from '../../store/actions/recipeActions/recipe';
 import {IStoreState} from '../../store/store';
+import {withAuthorization} from '../../common/withAuthorization';
+import {IRecipeData} from '../../store/reducers/recipeReducer';
 
-import modules from './ChangePassword.module.scss';
+import modules from './EditRecipe.module.scss';
 
 export interface IFormField {
   errors?: Array<string>;
@@ -24,13 +26,14 @@ export interface IFormField {
 
 const mapStateToProps = (state: IStoreState) => {
   return {
-    authenticatedUser: state.auth.authenticatedUser,
-    authenticationError: state.auth.authError,
-    changePasswordSuccess: state.auth.changePasswordSuccess,
+    editRecipeSuccess: state.recipe.recipeSuccess,
+    recipeError: state.recipe.recipeError,
+    recipeId: state.recipe.recipeId,
+    recipeIsLoading: state.recipe.recipeIsLoading,
   }
 }
 
-const mapDispatchToProps = {changePassword, changePasswordEnd, changePasswordFail};
+const mapDispatchToProps = {editRecipe, editRecipeEnd, editRecipeFail};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -42,26 +45,36 @@ interface IPropTypes extends PropsFromRedux, RouteComponentProps {
 
 interface IState {
   isFormValid: boolean;
+  isErrorModalVisible: boolean;
 }
 
-class ChangePassword extends React.Component<IPropTypes, IState> {
+class EditRecipe extends React.Component<IPropTypes, IState> {
   state = {
-    isErrorModalVisible: false,
     isFormValid: false,
+    isErrorModalVisible: false,
   }
 
   handleCloseErrorModal = () => {
-    this.props.changePasswordEnd();
+    this.props.editRecipeEnd();
   }
 
   handleCloseSuccessModal = () => {
-    this.props.changePasswordEnd();
-    if (this.props.authenticatedUser) {
-      this.props.history.push(`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`);
+    this.props.editRecipeEnd();
+
+    if (this.props.recipeId) {
+      this.props.history.push(`${AppRoutesEnum.RECIPE}/${this.props.recipeId}`);
     }
   }
 
-  handleFormFieldsChanged = (changedFields: Array<IFormField>, allFields: Array<IFormField>) => {
+  handleFormSubmit = (values: IRecipeData) => {
+    this.props.editRecipe(values, this.props.firebase);
+  }
+
+  handleFormSubmitFailed = () => {
+    this.props.editRecipeFail('There was a problem creating the recipe');
+  }
+
+  handleFormFieldsChange = (changedFields: Array<IFormField>, allFields: Array<IFormField>) => {
     const formInvalidFields = allFields.filter((field: IFormField) => {
       if (!field.value || (field.errors && field.errors.length > 0)) {
         return field;
@@ -75,47 +88,38 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
     }
   }
 
-  handleFormSubmit = (values: any) => {
-    this.props.changePassword(values.passwordNew, this.props.firebase);
-  }
-
-  handleFormSubmitFailed = () => {
-    this.props.changePasswordFail('There was a problem submitting the form');
-  }
-
   render() {
     return (
-      <div className={modules.resetPassword}>
-        <Typography.Title>Reset password</Typography.Title>
+      <div className={modules.editRecipe}>
+        <Typography.Title>Create a new recipe</Typography.Title>
 
-        <ChangePasswordForm
+        <EditRecipeForm
           isFormValid={this.state.isFormValid}
-          onFormFieldsChange={this.handleFormFieldsChanged}
           onFormSubmit={this.handleFormSubmit}
           onFormSubmitFailed={this.handleFormSubmitFailed}
+          onFormFieldsChange={this.handleFormFieldsChange}
         />
 
-        {this.props.authenticationError &&
+        {this.props.recipeError &&
           <ErrorModal
-            isVisible={this.props.authenticationError.length > 0}
-            message={this.props.authenticationError}
+            isVisible={this.props.recipeError.length > 0}
+            message={this.props.recipeError}
             onCloseModal={this.handleCloseErrorModal}
-            modalTitle="Change password fail"
+            modalTitle="Edit recipe fail"
           />
         }
 
         <SuccessModal
-          isVisible={this.props.changePasswordSuccess}
-          message='Password change successful'
+          isVisible={this.props.editRecipeSuccess}
+          message='You have successfully edited the recipe'
           onCloseModal={this.handleCloseSuccessModal}
-          modalTitle="Change password success"
+          modalTitle="Recipe edited"
         />
       </div>
     );
   }
 }
 
-const WrappedComponent = connector(withRouter(withFirebase(ChangePassword)));
+const WrappedComponent = connector(withRouter(withFirebase(withAuthorization(EditRecipe))));
 
-export {WrappedComponent as ChangePassword};
-
+export {WrappedComponent as EditRecipe};

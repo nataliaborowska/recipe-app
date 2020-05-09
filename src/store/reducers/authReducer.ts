@@ -4,7 +4,7 @@ import {AuthActionType} from '../actions/authActions/actionTypes';
 import {AuthActionTypesEnum} from '../actions/authActions/typesEnum';
 
 export interface IAuthState {
-  authenticatedUser: null | firebase.auth.UserCredential;
+  authenticatedUser: null | firebase.User;
   authError: null | string;
   authIsLoading: boolean;
   changePasswordSuccess: boolean;
@@ -22,7 +22,7 @@ export interface IUser {
 }
 
 const initialState: IAuthState = {
-  authenticatedUser: null as null | firebase.auth.UserCredential,
+  authenticatedUser: null as null | firebase.User,
   authError: null as null | string,
   authIsLoading: false,
   changePasswordSuccess: false,
@@ -35,91 +35,91 @@ const initialState: IAuthState = {
 
 export const authReducer = (state = initialState, action: AuthActionType): IAuthState => {
   switch (action.type) {
-    case AuthActionTypesEnum.FetchUsersFail:
+    case AuthActionTypesEnum.FETCH_USERS_FAIL:
       return {
         ...state,
         fetchingUsers: false,
         fetchUsersError: true,
       }
-    case AuthActionTypesEnum.FetchUsersStart:
+    case AuthActionTypesEnum.FETCH_USERS_START:
       return {
         ...state,
         fetchingUsers: true,
         fetchUsersError: false,
       }
-    case AuthActionTypesEnum.FetchUsersSuccess:
+    case AuthActionTypesEnum.FETCH_USERS_SUCCESS:
       return {
         ...state,
         fetchingUsers: false,
         users: action.usersList,
       }
-    case AuthActionTypesEnum.ChangePasswordFail:
-    case AuthActionTypesEnum.ResetPasswordFail:
-    case AuthActionTypesEnum.SignInFail:
-    case AuthActionTypesEnum.SignUpFail:
+    case AuthActionTypesEnum.CHANGE_PASSWORD_FAIL:
+    case AuthActionTypesEnum.RESET_PASSWORD_FAIL:
+    case AuthActionTypesEnum.SIGN_IN_FAIL:
+    case AuthActionTypesEnum.SIGN_UP_FAIL:
       return {
         ...state,
         authError: action.authError,
         authIsLoading: false,
       }
-    case AuthActionTypesEnum.ChangePasswordEnd: {
+    case AuthActionTypesEnum.CHANGE_PASSWORD_END: {
       return {
         ...state,
         authError: null,
         changePasswordSuccess: false,
       }
     }
-    case AuthActionTypesEnum.ChangePasswordStart:
+    case AuthActionTypesEnum.CHANGE_PASSWORD_START:
       return {
         ...state,
         authError: null,
         authIsLoading: true,
       }
-    case AuthActionTypesEnum.ChangePasswordSuccess:
+    case AuthActionTypesEnum.CHANGE_PASSWORD_SUCCESS:
       return {
         ...state,
         authIsLoading: false,
         changePasswordSuccess: true
       }
-    case AuthActionTypesEnum.RemoveUsersListEnd:
+    case AuthActionTypesEnum.REMOVE_USERS_LIST_END:
       return {
         ...state,
         users: [],
       }
-    case AuthActionTypesEnum.ResetPasswordSuccess:
+    case AuthActionTypesEnum.RESET_PASSWORD_SUCCESS:
       return {
         ...state,
         authIsLoading: false,
         resetPasswordSuccess: true,
       }
-    case AuthActionTypesEnum.ResetPasswordEnd:
+    case AuthActionTypesEnum.RESET_PASSWORD_END:
       return {
         ...state,
         authError: null,
         resetPasswordSuccess: false,
       }
-    case AuthActionTypesEnum.SignInStart:
-    case AuthActionTypesEnum.SignUpStart:
+    case AuthActionTypesEnum.SIGN_IN_START:
+    case AuthActionTypesEnum.SIGN_UP_START:
       return {
         ...state,
         authenticatedUser: null,
         authError: null,
         authIsLoading: true,
       }
-    case AuthActionTypesEnum.SignInSuccess:
-    case AuthActionTypesEnum.SignUpSuccess:
+    case AuthActionTypesEnum.SIGN_IN_SUCCESS:
+    case AuthActionTypesEnum.SIGN_UP_SUCCESS:
       return {
         ...state,
-        authenticatedUser: action.authenticatedUser,
+        authenticatedUser: action.authenticatedUser.user,
         authIsLoading: false,
         isAuthenticated: true,
       }
-    case AuthActionTypesEnum.SignOutFail:
+    case AuthActionTypesEnum.SIGN_OUT_FAIL:
       return {
         ...state,
         authError: action.signOutError,
       }
-    case AuthActionTypesEnum.SignOutSuccess:
+    case AuthActionTypesEnum.SIGN_OUT_SUCCESS:
       return {
         ...state,
         authenticatedUser: null,
