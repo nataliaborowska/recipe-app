@@ -1,14 +1,18 @@
 import React from 'react';
-import {Form, Button, Input, InputNumber} from 'antd';
+import {Form, Button, Input, InputNumber, Select} from 'antd';
 import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {v4 as uuidv4} from 'uuid';
 
+import {cuisineList} from '../../../utils/cuisineList';
 import {IFormField} from '../EditRecipe';
+import {IRecipeData} from '../../../store/reducers/recipeReducer';
 
 interface IPropTypes {
   isFormValid: boolean;
   onFormSubmit: (values: any) => void;
   onFormSubmitFailed: () => void;
   onFormFieldsChange: (changedFields: Array<IFormField>, allFields: Array<IFormField>) => void;
+  recipeData: IRecipeData | null;
 }
 
 export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
@@ -31,6 +35,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
+      initialValues={props.recipeData ? props.recipeData : {}}
       name="edit-recipe"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
@@ -86,6 +91,26 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
         }]}
       >
         <InputNumber />
+      </Form.Item>
+
+      <Form.Item
+        label="Cuisine type"
+        name="cuisineType"
+        rules={[{required: true}]}
+      >
+        <Select
+          mode="multiple"
+          placeholder="Select cuisine type"
+        >
+          {cuisineList.map(cuisine => (
+            <Select.Option
+              key={uuidv4()}
+              value={cuisine}
+            >
+              {cuisine}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.List name="ingredients">
@@ -200,7 +225,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
           type="primary"
           htmlType="submit"
         >
-          Create new recipe
+          Edit the recipe
         </Button>
       </Form.Item>
     </Form>

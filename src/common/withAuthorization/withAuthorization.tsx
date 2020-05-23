@@ -5,6 +5,7 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {IFirebase, withFirebase} from '../../components/Firebase';
 import {IStoreState} from '../../store/store';
+import {signInSuccess} from '../../store/actions/authActions/auth';
 
 const mapStateToProps = (state: IStoreState) => {
   return {
@@ -12,13 +13,14 @@ const mapStateToProps = (state: IStoreState) => {
   }
 }
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = {signInSuccess};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IPropTypes extends RouteComponentProps, PropsFromRedux {
   firebase: IFirebase;
-  isAuthenticated: boolean;
 }
 
 export const withAuthorization = (Component: any) => {
@@ -43,12 +45,10 @@ export const withAuthorization = (Component: any) => {
 
     checkIfUserAuthenticated() {
       this.firebaseListener = this.props.firebase.auth.onAuthStateChanged((authUser: any) => {
-        console.warn('is this valid', authUser);
-
         if (authUser === null) {
           this.props.history.push(AppRoutesEnum.SIGN_IN);
         } else {
-
+          this.props.signInSuccess(authUser);
         }
       });
     }

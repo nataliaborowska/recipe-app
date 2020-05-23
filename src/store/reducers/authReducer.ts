@@ -4,7 +4,7 @@ import {AuthActionType} from '../actions/authActions/actionTypes';
 import {AuthActionTypesEnum} from '../actions/authActions/typesEnum';
 
 export interface IAuthState {
-  authenticatedUser: null | firebase.User;
+  authenticatedUser: null | IUser;
   authError: null | string;
   authIsLoading: boolean;
   changePasswordSuccess: boolean;
@@ -16,13 +16,13 @@ export interface IAuthState {
 }
 
 export interface IUser {
-  email: string;
-  userId: string;
-  username: string;
+  email?: string | null;
+  userId?: string;
+  username?: string | null;
 }
 
 const initialState: IAuthState = {
-  authenticatedUser: null as null | firebase.User,
+  authenticatedUser: null as null | IUser,
   authError: null as null | string,
   authIsLoading: false,
   changePasswordSuccess: false,
@@ -108,9 +108,16 @@ export const authReducer = (state = initialState, action: AuthActionType): IAuth
       }
     case AuthActionTypesEnum.SIGN_IN_SUCCESS:
     case AuthActionTypesEnum.SIGN_UP_SUCCESS:
+      const user = action.authenticatedUser.user;
+      const userInfo = {
+        username: user?.displayName,
+        email: user?.email,
+        userId: user?.uid,
+      }
+
       return {
         ...state,
-        authenticatedUser: action.authenticatedUser.user,
+        authenticatedUser: userInfo,
         authIsLoading: false,
         isAuthenticated: true,
       }

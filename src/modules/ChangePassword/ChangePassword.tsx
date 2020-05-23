@@ -57,7 +57,7 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
   handleCloseSuccessModal = () => {
     this.props.changePasswordEnd();
     if (this.props.authenticatedUser) {
-      this.props.history.push(`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`);
+      this.props.history.push(`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.userId}`);
     }
   }
 

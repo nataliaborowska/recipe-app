@@ -35,7 +35,7 @@ class Header extends React.Component<IPropTypes> {
   get menu() {
     return (
       <Menu>
-        <Menu.Item key="1"><Link to={AppRoutesEnum.RECIPES_LIST}>Recipes</Link></Menu.Item>
+        <Menu.Item key="1"><Link to={AppRoutesEnum.RECIPES}>Recipes</Link></Menu.Item>
 
         <Menu.Item key="2"><Link to={AppRoutesEnum.CREATE_RECIPE}>Create Recipe</Link></Menu.Item>
 
@@ -43,7 +43,7 @@ class Header extends React.Component<IPropTypes> {
 
         {this.props.authenticatedUser &&
           <Menu.Item key="4">
-            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.uid}`}>Account</Link>
+            <Link to={`${AppRoutesEnum.ACCOUNT}/${this.props.authenticatedUser.userId}`}>Account</Link>
           </Menu.Item>
         }
 

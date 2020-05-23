@@ -18,6 +18,6 @@ const store = createStore(rootReducer, applyMiddleware(thunk));
 
 export type RootStore = ReturnType<typeof rootReducer>;
 
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootStore, unknown, Action<string>>
+export type AppThunk<T> = ThunkAction<T, RootStore, unknown, Action<string>>
 
 export default store;

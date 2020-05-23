@@ -27,7 +27,7 @@ import {
 } from './actionTypes';
 
 //action creators
-export const changePassword = (passwordNew: string, firebase: IFirebase): AppThunk => {
+export const changePassword = (passwordNew: string, firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<ChangePasswordStartAction>({
       type: AuthActionTypesEnum.CHANGE_PASSWORD_START,
@@ -59,7 +59,7 @@ export const changePasswordFail = (error: string): ChangePasswordFailAction => {
   }
 }
 
-export const fetchUsersList = (firebase: IFirebase): AppThunk => {
+export const fetchUsersList = (firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<FetchUsersStartAction>({
       type: AuthActionTypesEnum.FETCH_USERS_START,
@@ -88,7 +88,7 @@ export const fetchUsersList = (firebase: IFirebase): AppThunk => {
   }
 }
 
-export const removeUsersList = (firebase: IFirebase): AppThunk => {
+export const removeUsersList = (firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase.users().off();
@@ -102,7 +102,7 @@ export const removeUsersList = (firebase: IFirebase): AppThunk => {
   }
 }
 
-export const resetPassword = (email: string, firebase: IFirebase): AppThunk => {
+export const resetPassword = (email: string, firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase.passwordReset(email);
@@ -133,29 +133,38 @@ export const resetPasswordFail = (error: string): ResetPasswordFailAction => {
 export const saveUserToDatabase = (
   email: string,
   username: string,
-  authenticatedUser: any,
+  authenticatedUser: firebase.auth.UserCredential,
   firebase: IFirebase
-): AppThunk => {
+): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
-    try {
-      await firebase
-        .user(authenticatedUser.user.uid)
-        .set({email, username});
+    if (authenticatedUser.user) {
+      try {
+        await firebase
+          .user(authenticatedUser.user.uid)
+          .set({email, username});
 
-      dispatch<SignUpSuccessAction>({
-        type: AuthActionTypesEnum.SIGN_UP_SUCCESS,
-        authenticatedUser: authenticatedUser,
-      });
-    } catch (error) {
-      dispatch<SignUpFailAction>({
-        type: AuthActionTypesEnum.SIGN_UP_FAIL,
-        authError: error.message,
-      });
+        dispatch<SignUpSuccessAction>({
+          type: AuthActionTypesEnum.SIGN_UP_SUCCESS,
+          authenticatedUser: authenticatedUser,
+        });
+      } catch (error) {
+        dispatch<SignUpFailAction>({
+          type: AuthActionTypesEnum.SIGN_UP_FAIL,
+          authError: error.message,
+        });
+      }
     }
   }
 }
 
-export const signIn = (email: string, password: string, firebase: IFirebase): AppThunk => {
+export const signInSuccess = (authenticatedUser: firebase.auth.UserCredential): SignInSuccessAction => {
+  return {
+    type: AuthActionTypesEnum.SIGN_IN_SUCCESS,
+    authenticatedUser: authenticatedUser,
+  }
+}
+
+export const signIn = (email: string, password: string, firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<SignInStartAction>({
       type: AuthActionTypesEnum.SIGN_IN_START,
@@ -164,10 +173,7 @@ export const signIn = (email: string, password: string, firebase: IFirebase): Ap
     try {
       const authenticatedUser = await firebase.signInWithEmailAndPassword(email, password);
 
-      dispatch<SignInSuccessAction>({
-        type: AuthActionTypesEnum.SIGN_IN_SUCCESS,
-        authenticatedUser: authenticatedUser,
-      });
+      dispatch<SignInSuccessAction>(signInSuccess(authenticatedUser));
     } catch (error) {
       dispatch<SignInFailAction>({
         type: AuthActionTypesEnum.SIGN_IN_FAIL,
@@ -177,7 +183,7 @@ export const signIn = (email: string, password: string, firebase: IFirebase): Ap
   }
 };
 
-export const signOut = (firebase: IFirebase): AppThunk => {
+export const signOut = (firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase.signOut();
@@ -200,7 +206,7 @@ export const signUp = (
   password: string,
   username: string,
   firebase: IFirebase
-): AppThunk => {
+): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<SignUpStartAction>({
       type: AuthActionTypesEnum.SIGN_UP_START,

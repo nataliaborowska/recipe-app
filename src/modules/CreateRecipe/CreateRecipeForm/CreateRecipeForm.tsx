@@ -1,8 +1,11 @@
 import React from 'react';
-import {Form, Button, Input, InputNumber} from 'antd';
+import {Form, Button, Input, InputNumber, Select} from 'antd';
 import {MinusCircleOutlined, PlusOutlined} from '@ant-design/icons';
+import {v4 as uuidv4} from 'uuid';
 
+import {cuisineList} from '../../../utils/cuisineList';
 import {IFormField} from '../CreateRecipe';
+import {IRecipeData} from '../../../store/reducers/recipeReducer';
 
 interface IPropTypes {
   isFormValid: boolean;
@@ -86,6 +89,26 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
         }]}
       >
         <InputNumber />
+      </Form.Item>
+
+      <Form.Item
+        label="Cuisine   type"
+        name="cuisineType"
+        rules={[{required: true}]}
+      >
+        <Select
+          mode="multiple"
+          placeholder="Select cuisine type"
+        >
+          {cuisineList.map(cuisine => (
+            <Select.Option
+              key={uuidv4()}
+              value={cuisine}
+            >
+              {cuisine}
+            </Select.Option>
+          ))}
+        </Select>
       </Form.Item>
 
       <Form.List name="ingredients">

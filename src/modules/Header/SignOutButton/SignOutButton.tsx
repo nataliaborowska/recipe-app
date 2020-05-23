@@ -7,7 +7,7 @@ import {IFirebase, withFirebase} from '../../../components/Firebase';
 interface IPropTypes {
   firebase: IFirebase;
   isAuthenticated: boolean;
-  signOut: (firebase: IFirebase) => AppThunk;
+  signOut: (firebase: IFirebase) => AppThunk<void>;
 }
 
 const SignOutButton: React.FC<IPropTypes> = (props) => {

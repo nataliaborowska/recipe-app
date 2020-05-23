@@ -62,7 +62,7 @@ class CreateRecipe extends React.Component<IPropTypes, IState> {
     this.props.createRecipeEnd();
 
     if (this.props.recipeId) {
-      this.props.history.push(`${AppRoutesEnum.RECIPE}/${this.props.recipeId}`);
+      this.props.history.push(`${AppRoutesEnum.RECIPES}/${this.props.recipeId}`);
     }
   }
 

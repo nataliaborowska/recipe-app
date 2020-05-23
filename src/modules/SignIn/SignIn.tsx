@@ -87,7 +87,7 @@ class SignIn extends React.Component<IPropTypes, IState> {
 
   render() {
     if (this.props.isAuthenticated) {
-      return (<Redirect to={AppRoutesEnum.RECIPES_LIST} />);
+      return (<Redirect to={AppRoutesEnum.RECIPES} />);
     }
 
     return (

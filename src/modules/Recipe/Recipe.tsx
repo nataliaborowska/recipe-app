@@ -2,6 +2,7 @@ import React from 'react';
 import {withRouter, RouteComponentProps} from 'react-router-dom';
 import {Col, Divider, Rate, Row, Statistic, Typography, Spin} from 'antd';
 import {connect, ConnectedProps} from 'react-redux';
+import {v4 as uuidv4} from 'uuid';
 
 import {withAuthorization} from '../../common/withAuthorization';
 import {IFirebase, withFirebase} from '../../components/Firebase';
@@ -49,13 +50,17 @@ class Recipe extends React.Component<IPropTypes> {
         <div className={styles.recipeWrapper}>
           <Row gutter={16}>
             <Col span={12}>
-              <Typography.Title>{this.props.recipeData.title}</Typography.Title>
+              <Typography.Title>{this.props.recipeData.name}</Typography.Title>
 
               {/* <span className={styles.recipeRating}>
                 <Rate value={this.props.recipeData.rating} />
 
                 ({this.props.recipeData.rating})
               </span> */}
+
+              <Typography.Paragraph ellipsis={{rows: 4, expandable: true}}>
+                Cuisine: {this.props.recipeData.cuisineType}
+              </Typography.Paragraph>
 
               <Typography.Paragraph ellipsis={{rows: 4, expandable: true}}>
                 {this.props.recipeData.description}
@@ -87,9 +92,9 @@ class Recipe extends React.Component<IPropTypes> {
 
             <Col span={12}>
               <img
-                alt={this.props.recipeData.title}
+                alt={this.props.recipeData.name}
                 className={styles.recipeImage}
-                src={this.props.recipeData.image}
+              // src={this.props.recipeData.image}
               />
             </Col>
           </Row>
@@ -100,7 +105,12 @@ class Recipe extends React.Component<IPropTypes> {
 
           <ul className={styles.ingredientsList}>
             {this.props.recipeData.ingredients.map((ingredient: string) => (
-              <li className={styles.ingredientsListItem}>{ingredient}</li>
+              <li
+                className={styles.ingredientsListItem}
+                key={uuidv4()}
+              >
+                {ingredient}
+              </li>
             ))}
           </ul>
 
@@ -108,7 +118,12 @@ class Recipe extends React.Component<IPropTypes> {
 
           <ol className={styles.directionsList}>
             {this.props.recipeData.instructions.map((instruction: string) => (
-              <li className={styles.directionsListItem}>{instruction}</li>
+              <li
+                className={styles.directionsListItem}
+                key={uuidv4()}
+              >
+                {instruction}
+              </li>
             ))}
           </ol>
         </div>

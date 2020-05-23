@@ -10,6 +10,9 @@ import {
   CreateRecipeSuccessAction,
   CreateRecipeStartAction,
   CreateRecipeFailAction,
+  DeleteRecipeFailAction,
+  DeleteRecipeStartAction,
+  DeleteRecipeSuccessAction,
   EditRecipeEndAction,
   EditRecipeSuccessAction,
   EditRecipeStartAction,
@@ -37,7 +40,7 @@ export const createRecipeFail = (error: string): CreateRecipeFailAction => {
   }
 }
 
-export const createRecipe = (values: IRecipeData, firebase: IFirebase): AppThunk => {
+export const createRecipe = (values: IRecipeData, firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<CreateRecipeStartAction>({
       type: RecipeActionTypesEnum.CREATE_RECIPE_START,
@@ -70,27 +73,49 @@ export const editRecipeFail = (error: string): EditRecipeFailAction => {
   }
 }
 
-export const editRecipe = (values: IRecipeData, firebase: IFirebase): AppThunk => {
+export const editRecipe = (id: string, values: IRecipeData, firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<EditRecipeStartAction>({
       type: RecipeActionTypesEnum.EDIT_RECIPE_START,
     });
 
     try {
-      const recipeData = await firebase.updateRecipe(values);
+      await firebase.updateRecipe(id, values);
 
       dispatch<EditRecipeSuccessAction>({
         type: RecipeActionTypesEnum.EDIT_RECIPE_SUCCESS,
-        recipeId: recipeData.key,
-      })
+      });
 
     } catch (error) {
+
       dispatch<EditRecipeFailAction>(editRecipeFail(error.message))
     }
   }
 }
 
-export const fetchRecipeData = (recipeId: string, firebase: IFirebase): AppThunk => {
+export const deleteRecipe = (recipeId: string, firebase: IFirebase) => {
+  return async (dispatch: Dispatch) => {
+    dispatch<DeleteRecipeStartAction>({
+      type: RecipeActionTypesEnum.DELETE_RECIPE_START,
+    });
+
+    try {
+      firebase.deleteRecipe(recipeId);
+
+      dispatch<DeleteRecipeSuccessAction>({
+        type: RecipeActionTypesEnum.DELETE_RECIPE_SUCCESS,
+      })
+
+    } catch (error) {
+      dispatch<DeleteRecipeFailAction>({
+        type: RecipeActionTypesEnum.DELETE_RECIPE_FAIL,
+        recipeError: error.message,
+      })
+    }
+  }
+}
+
+export const fetchRecipeData = (recipeId: string, firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<FetchRecipeStartAction>({
       type: RecipeActionTypesEnum.FETCH_RECIPE_START,
@@ -114,7 +139,7 @@ export const fetchRecipeData = (recipeId: string, firebase: IFirebase): AppThunk
   }
 }
 
-export const fetchRecipesList = (firebase: IFirebase): AppThunk => {
+export const fetchRecipesList = (firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     dispatch<FetchRecipesListStartAction>({
       type: RecipeActionTypesEnum.FETCH_RECIPES_LIST_START,
@@ -123,17 +148,21 @@ export const fetchRecipesList = (firebase: IFirebase): AppThunk => {
     try {
       await firebase.recipes().on('value', (snapshot: firebase.database.DataSnapshot) => {
         const recipes = snapshot.val();
-        const recipesList = Object.keys(recipes).map(key => {
-          return {
-            ...recipes[key],
-            recipeId: key,
-          }
-        });
 
-        dispatch<FetchRecipesListSuccessAction>({
-          type: RecipeActionTypesEnum.FETCH_RECIPES_LIST_SUCCESS,
-          recipesList: recipesList,
-        });
+        if (recipes) {
+          const recipesList = Object.keys(recipes).map(key => {
+            return {
+              ...recipes[key],
+              recipeId: key,
+            }
+          });
+
+          dispatch<FetchRecipesListSuccessAction>({
+            type: RecipeActionTypesEnum.FETCH_RECIPES_LIST_SUCCESS,
+            recipesList: recipesList,
+          });
+        }
+
       });
     } catch (error) {
       dispatch<FetchRecipesListFailAction>({
@@ -144,7 +173,7 @@ export const fetchRecipesList = (firebase: IFirebase): AppThunk => {
   }
 }
 
-export const removeRecipesList = (firebase: IFirebase): AppThunk => {
+export const removeRecipesList = (firebase: IFirebase): AppThunk<void> => {
   return async (dispatch: Dispatch) => {
     try {
       await firebase.recipes().off();

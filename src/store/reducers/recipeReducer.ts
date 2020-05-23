@@ -3,6 +3,7 @@ import {RecipeActionTypesEnum} from '../actions/recipeActions/typesEnum';
 
 export interface IRecipeData {
   calories: number;
+  cuisineType: Array<string>;
   description: string;
   ingredients: Array<string>;
   instructions: Array<string>;
@@ -13,11 +14,11 @@ export interface IRecipeData {
 }
 
 export interface IRecipeState {
-  recipeError: null | string;
+  recipeError: string | null;
   recipeIsLoading: boolean;
-  recipeId: null | any;
+  recipeId: string | null;
   recipeSuccess: boolean;
-  recipeData: any;
+  recipeData: IRecipeData | null;
   recipesList: Array<IRecipeData>;
 }
 
@@ -41,13 +42,13 @@ export const recipeReducer = (state = initialState, action: RecipeActionType): I
       }
     case RecipeActionTypesEnum.CREATE_RECIPE_FAIL:
     case RecipeActionTypesEnum.EDIT_RECIPE_FAIL:
+    case RecipeActionTypesEnum.DELETE_RECIPE_FAIL:
       return {
         ...state,
         recipeError: action.recipeError,
         recipeIsLoading: false,
       }
     case RecipeActionTypesEnum.CREATE_RECIPE_SUCCESS:
-    case RecipeActionTypesEnum.EDIT_RECIPE_SUCCESS:
       return {
         ...state,
         recipeError: null,
@@ -55,12 +56,25 @@ export const recipeReducer = (state = initialState, action: RecipeActionType): I
         recipeId: action.recipeId,
         recipeSuccess: true,
       }
+    case RecipeActionTypesEnum.EDIT_RECIPE_SUCCESS:
+      return {
+        ...state,
+        recipeError: null,
+        recipeIsLoading: false,
+        recipeSuccess: true,
+      }
     case RecipeActionTypesEnum.CREATE_RECIPE_START:
     case RecipeActionTypesEnum.EDIT_RECIPE_START:
+    case RecipeActionTypesEnum.DELETE_RECIPE_START:
       return {
         ...state,
         recipeError: null,
         recipeIsLoading: true,
+      }
+    case RecipeActionTypesEnum.DELETE_RECIPE_SUCCESS:
+      return {
+        ...state,
+        recipeIsLoading: false,
       }
     case RecipeActionTypesEnum.FETCH_RECIPE_START:
       return {
