@@ -81,9 +81,16 @@ export interface RemoveRecipesListEndAction {
   type: RecipeActionTypesEnum.REMOVE_RECIPES_LIST_END;
 }
 
+export interface SetRecipeFiltersAction {
+  filterByName: Array<string>,
+  filterByCuisine: Array<string>,
+  filterByIngredients: Array<string>,
+  type: RecipeActionTypesEnum.SET_RECIPE_FILTERS,
+}
+
 export type RecipeActionType = CreateRecipeStartAction | CreateRecipeFailAction | CreateRecipeSuccessAction
   | CreateRecipeEndAction | EditRecipeStartAction | EditRecipeFailAction | EditRecipeSuccessAction
   | EditRecipeEndAction | DeleteRecipeFailAction | DeleteRecipeStartAction | DeleteRecipeSuccessAction
   | FetchRecipeStartAction | FetchRecipeSuccessAction | FetchRecipeFailAction
   | FetchRecipesListStartAction | FetchRecipesListSuccessAction | FetchRecipesListFailAction
-  | RemoveRecipesListEndAction;
+  | RemoveRecipesListEndAction | SetRecipeFiltersAction;

@@ -80,18 +80,6 @@ export class Firebase implements IFirebase {
 
   //Recipe APi
   createRecipe = (values: IRecipeData) => {
-    const filterNameCousine = values.cuisineType.map((cuisine: string) => `${values.name}_${cuisine}`);
-    const filterNameIngredients = values.ingredients.map((ingredient: string) => `${values.name}_${ingredient}`);
-    const filterCuisineIngredientsArray = values.ingredients.map((ingredient: string) => {
-      return values.cuisineType.map((cuisine: string) => {
-        return `${cuisine}_${ingredient}`;
-      });
-    });
-    const filterCuisineIngredients = ([] as Array<string>).concat(...filterCuisineIngredientsArray);
-    const filterNameCuisineIngredients = filterCuisineIngredients.map(cuisineIngredient => {
-      return `${values.name}_${cuisineIngredient}`;
-    });
-
     return this.database.ref('recipes/').push({
       calories: values.calories,
       cuisineType: values.cuisineType,
@@ -101,26 +89,10 @@ export class Firebase implements IFirebase {
       name: values.name,
       preparationTime: values.preparationTime,
       servings: values.servings,
-      name_cuisineType: filterNameCousine,
-      name_ingredients: filterNameIngredients,
-      cuisineType_ingredients: filterCuisineIngredients,
-      name_cuisineType_ingredients: filterNameCuisineIngredients,
     });
   }
 
   updateRecipe = (id: string, values: IRecipeData) => {
-    const filterNameCousine = values.cuisineType.map((cuisine: string) => `${values.name}_${cuisine}`);
-    const filterNameIngredients = values.ingredients.map((ingredient: string) => `${values.name}_${ingredient}`);
-    const filterCuisineIngredientsArray = values.ingredients.map((ingredient: string) => {
-      return values.cuisineType.map((cuisine: string) => {
-        return `${cuisine}_${ingredient}`;
-      });
-    });
-    const filterCuisineIngredients = ([] as Array<string>).concat.apply([], filterCuisineIngredientsArray);
-    const filterNameCuisineIngredients = filterCuisineIngredients.map(cuisineIngredient => {
-      return `${values.name}_${cuisineIngredient}`;
-    });
-
     return this.database.ref(`recipes/${id}`).update({
       calories: values.calories,
       description: values.description,
@@ -129,10 +101,6 @@ export class Firebase implements IFirebase {
       name: values.name,
       preparationTime: values.preparationTime,
       servings: values.servings,
-      name_cuisineType: filterNameCousine,
-      name_ingredients: filterNameIngredients,
-      cuisineType_ingredients: filterCuisineIngredients,
-      name_cuisineType_ingredients: filterNameCuisineIngredients,
     });
   }
 

@@ -2,6 +2,8 @@ import React from 'react';
 import {Select} from 'antd';
 import {v4 as uuidv4} from 'uuid';
 
+import styles from './RecipeFilters.module.scss';
+
 interface IPropTypes {
   recipeNamesList: Array<string>;
   ingredientsList: Array<string>;
@@ -12,11 +14,11 @@ interface IPropTypes {
 }
 
 export const RecipeFilters: React.FC<IPropTypes> = (props) => (
-  <div>
+  <div className={styles.recipeFilters}>
     <Select
       mode="multiple"
       showSearch
-      style={{width: 200}}
+      style={{width: 200, paddingRight: 10}}
       placeholder="Select a recipe"
       optionFilterProp="children"
       onChange={props.onNameSearch}
@@ -34,7 +36,7 @@ export const RecipeFilters: React.FC<IPropTypes> = (props) => (
 
     <Select
       showSearch
-      style={{width: 200}}
+      style={{width: 200, paddingRight: 10}}
       placeholder="Select a cuisine"
       mode="multiple"
       optionFilterProp="children"
@@ -52,7 +54,7 @@ export const RecipeFilters: React.FC<IPropTypes> = (props) => (
 
     <Select
       showSearch
-      style={{width: 200}}
+      style={{width: 200, paddingRight: 10}}
       placeholder="Select ingredients"
       mode="multiple"
       optionFilterProp="children"

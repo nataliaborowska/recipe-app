@@ -24,6 +24,7 @@ import {
   FetchRecipesListStartAction,
   FetchRecipesListSuccessAction,
   RemoveRecipesListEndAction,
+  SetRecipeFiltersAction,
 } from './actionTypes';
 
 //action creators
@@ -170,6 +171,15 @@ export const fetchRecipesList = (firebase: IFirebase): AppThunk<void> => {
         recipeError: error,
       });
     }
+  }
+}
+
+export const setRecipeFilters = (name: Array<string>, cuisine: Array<string>, ingredients: Array<string>): SetRecipeFiltersAction => {
+  return {
+    filterByName: name,
+    filterByCuisine: cuisine,
+    filterByIngredients: ingredients,
+    type: RecipeActionTypesEnum.SET_RECIPE_FILTERS,
   }
 }
 

@@ -14,6 +14,9 @@ export interface IRecipeData {
 }
 
 export interface IRecipeState {
+  filterByCuisine: Array<string>;
+  filterByIngredients: Array<string>;
+  filterByName: Array<string>;
   recipeError: string | null;
   recipeIsLoading: boolean;
   recipeId: string | null;
@@ -23,6 +26,9 @@ export interface IRecipeState {
 }
 
 const initialState: IRecipeState = {
+  filterByCuisine: [],
+  filterByIngredients: [],
+  filterByName: [],
   recipeError: null,
   recipeSuccess: false,
   recipeIsLoading: false,
@@ -112,6 +118,13 @@ export const recipeReducer = (state = initialState, action: RecipeActionType): I
       return {
         ...state,
         recipesList: [],
+      }
+    case RecipeActionTypesEnum.SET_RECIPE_FILTERS:
+      return {
+        ...state,
+        filterByCuisine: action.filterByCuisine,
+        filterByIngredients: action.filterByIngredients,
+        filterByName: action.filterByName,
       }
     default:
       return state;
