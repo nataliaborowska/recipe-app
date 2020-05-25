@@ -38,7 +38,7 @@ const RecipeCard: React.FC<IPropTypes> = (props) => {
       <div className={styles.recipeActions}>
         <Link
           className={styles.recipeAction}
-          to={`${AppRoutesEnum.RECIPES}/${props.recipeId}`}
+          to={`${AppRoutesEnum.RECIPE}/${props.recipeId}`}
         >
           <EyeOutlined />
         </Link>

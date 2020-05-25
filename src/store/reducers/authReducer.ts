@@ -1,5 +1,3 @@
-import firebase from 'firebase';
-
 import {AuthActionType} from '../actions/authActions/actionTypes';
 import {AuthActionTypesEnum} from '../actions/authActions/typesEnum';
 

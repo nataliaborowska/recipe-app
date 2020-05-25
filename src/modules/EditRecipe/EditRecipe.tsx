@@ -9,10 +9,17 @@ import {ErrorModal} from '../../common/ErrorModal';
 import {IFirebase} from '../../components/Firebase';
 import {SuccessModal} from '../../common/SuccessModal';
 import {withFirebase} from '../../components/Firebase';
-import {editRecipe, editRecipeEnd, editRecipeFail, fetchRecipeData} from '../../store/actions/recipeActions/recipe';
+import {
+  deleteRecipe,
+  editRecipe,
+  editRecipeEnd,
+  editRecipeFail,
+  fetchRecipeData
+} from '../../store/actions/recipeActions/recipe';
 import {IStoreState} from '../../store/store';
 import {withAuthorization} from '../../common/withAuthorization';
 import {IRecipeData} from '../../store/reducers/recipeReducer';
+import {RecipeLinks} from './RecipeLinks';
 
 import modules from './EditRecipe.module.scss';
 
@@ -33,7 +40,7 @@ const mapStateToProps = (state: IStoreState) => {
   }
 }
 
-const mapDispatchToProps = {editRecipe, editRecipeEnd, editRecipeFail, fetchRecipeData};
+const mapDispatchToProps = {deleteRecipe, editRecipe, editRecipeEnd, editRecipeFail, fetchRecipeData};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -53,15 +60,22 @@ interface IState {
 }
 
 class EditRecipe extends React.Component<IPropTypes, IState> {
-  state = {
-    isFormValid: false,
-    isErrorModalVisible: false,
+  private recipeId: string;
+  constructor(props: IPropTypes) {
+    super(props);
+
+    this.state = {
+      isFormValid: false,
+      isErrorModalVisible: false,
+    }
+
+    const {recipeId} = this.props.match.params;
+    this.recipeId = recipeId;
   }
 
-  componentDidMount() {
-    const {recipeId} = this.props.match.params;
 
-    this.props.fetchRecipeData(recipeId, this.props.firebase);
+  componentDidMount() {
+    this.props.fetchRecipeData(this.recipeId, this.props.firebase);
   }
 
   handleCloseErrorModal = () => {
@@ -70,11 +84,19 @@ class EditRecipe extends React.Component<IPropTypes, IState> {
 
   handleCloseSuccessModal = () => {
     this.props.editRecipeEnd();
-    this.props.history.push(`${AppRoutesEnum.RECIPES}/${this.props.match.params.recipeId}`);
+    this.props.history.push(`${AppRoutesEnum.RECIPES}/${this.recipeId}`);
+  }
+
+  handleDeleteClick = () => {
+    if (this.recipeId) {
+      this.props.deleteRecipe(this.recipeId, this.props.firebase);
+
+      this.props.history.push(`${AppRoutesEnum.RECIPES}`);
+    }
   }
 
   handleFormSubmit = (values: IRecipeData) => {
-    this.props.editRecipe(this.props.match.params.recipeId, values, this.props.firebase);
+    this.props.editRecipe(this.recipeId, values, this.props.firebase);
   }
 
   handleFormSubmitFailed = () => {
@@ -98,6 +120,11 @@ class EditRecipe extends React.Component<IPropTypes, IState> {
   render() {
     return (
       <div className={modules.editRecipe}>
+        <RecipeLinks
+          recipeId={this.recipeId}
+          onDeleteClick={this.handleDeleteClick}
+        />
+
         <Typography.Title>Edit the recipe</Typography.Title>
 
         {this.props.recipeData &&

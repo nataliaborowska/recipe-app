@@ -5,6 +5,7 @@ export enum AppRoutesEnum {
   CREATE_RECIPE = '/recipes/create-recipe',
   EDIT_RECIPE = '/recipes/edit-recipe',
   LANDING_PAGE = '/',
+  RECIPE = '/recipes/recipe',
   RECIPES = '/recipes',
   RESET_PASSWORD = '/reset-password',
   SIGN_IN = '/sign-in',

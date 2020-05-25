@@ -1,13 +1,15 @@
 import React from 'react';
 import {withRouter, RouteComponentProps} from 'react-router-dom';
-import {Col, Divider, Rate, Row, Statistic, Typography, Spin} from 'antd';
+import {Col, Divider, Row, Statistic, Typography, Spin} from 'antd';
 import {connect, ConnectedProps} from 'react-redux';
 import {v4 as uuidv4} from 'uuid';
 
+import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
 import {withAuthorization} from '../../common/withAuthorization';
 import {IFirebase, withFirebase} from '../../components/Firebase';
-import {fetchRecipeData} from '../../store/actions/recipeActions/recipe';
+import {deleteRecipe, fetchRecipeData} from '../../store/actions/recipeActions/recipe';
 import {IStoreState} from '../../store/store';
+import {RecipeLinks} from './RecipeLinks';
 
 import styles from './Recipe.module.scss';
 
@@ -19,7 +21,7 @@ const mapStateToProps = (state: IStoreState) => {
   };
 }
 
-const mapDispatchToProps = {fetchRecipeData};
+const mapDispatchToProps = {deleteRecipe, fetchRecipeData};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -35,9 +37,19 @@ interface IPropTypes extends PropsFromRedux, RouteComponentProps<IMatchParams> {
 
 class Recipe extends React.Component<IPropTypes> {
   componentDidMount() {
-    const {recipeId} = this.props.match.params;
+    this.props.fetchRecipeData(this.recipeId, this.props.firebase);
+  }
 
-    this.props.fetchRecipeData(recipeId, this.props.firebase);
+  get recipeId() {
+    return this.props.match.params.recipeId;
+  }
+
+  handleDeleteClick = () => {
+    if (this.recipeId) {
+      this.props.deleteRecipe(this.recipeId, this.props.firebase);
+
+      this.props.history.push(`${AppRoutesEnum.RECIPES}`);
+    }
   }
 
   render() {
@@ -48,6 +60,11 @@ class Recipe extends React.Component<IPropTypes> {
     if (this.props.recipeData) {
       return (
         <div className={styles.recipeWrapper}>
+          <RecipeLinks
+            recipeId={this.recipeId}
+            onDeleteClick={this.handleDeleteClick}
+          />
+
           <Row gutter={16}>
             <Col span={12}>
               <Typography.Title>{this.props.recipeData.name}</Typography.Title>
