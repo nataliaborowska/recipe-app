@@ -7,14 +7,17 @@ import {withAuthorization} from '../../common/withAuthorization';
 
 import modules from './Account.module.scss';
 
-const Account: React.FC = () => (
-  <div className={modules.account}>
+export const AccountUnwrapped: React.FC = () => (
+  <div
+    className={modules.account}
+    data-test='component-account'
+  >
     <Typography.Title>My account</Typography.Title>
 
     <Link to={AppRoutesEnum.CHANGE_PASSWORD}>Change password</Link>
   </div>
 );
 
-const WrappedComponent = withAuthorization(Account);
+const WrappedComponent = withAuthorization(AccountUnwrapped);
 
 export {WrappedComponent as Account};

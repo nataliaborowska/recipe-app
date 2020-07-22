@@ -8,7 +8,7 @@ export interface IStoreState {
   recipe: IRecipeState;
 }
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   auth: authReducer,
   recipe: recipeReducer,
 });

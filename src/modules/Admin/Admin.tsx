@@ -34,7 +34,7 @@ interface IPropTypes extends PropsFromRedux {
   firebase: IFirebase;
 }
 
-class Admin extends React.Component<IPropTypes> {
+export class AdminUnwrapped extends React.Component<IPropTypes> {
   componentDidMount() {
     this.props.fetchUsersList(this.props.firebase);
   }
@@ -45,7 +45,10 @@ class Admin extends React.Component<IPropTypes> {
 
   render() {
     return (
-      <div className={modules.admin}>
+      <div
+        className={modules.admin}
+        data-test='component-admin'
+      >
         <Typography.Title>Admin</Typography.Title>
 
         {this.props.fetchingUsers ?
@@ -78,6 +81,6 @@ class Admin extends React.Component<IPropTypes> {
   }
 }
 
-const WrappedComponent = connector(withAuthorization(withFirebase(Admin)));
+const WrappedComponent = connector(withAuthorization(withFirebase(AdminUnwrapped)));
 
 export {WrappedComponent as Admin};

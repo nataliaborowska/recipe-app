@@ -20,7 +20,10 @@ import {SignUp} from './modules/SignUp';
 import modules from './App.module.scss';
 
 export const App: React.FC = () => (
-  <div className={modules.app}>
+  <div
+    className={modules.app}
+    data-test="component-app"
+  >
     <Layout>
       <Layout.Header><Header /></Layout.Header>
 

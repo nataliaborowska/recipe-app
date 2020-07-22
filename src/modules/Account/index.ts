@@ -1,1 +1,1 @@
-export {Account} from './Account';
+export {Account, AccountUnwrapped} from './Account';
