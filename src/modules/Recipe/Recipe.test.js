@@ -2,7 +2,7 @@ import React from 'react';
 import {BrowserRouter} from 'react-router-dom';
 import {shallow} from 'enzyme';
 
-import {Reacipe, RecipeConnected, RecipeUnwrapped} from './Recipe';
+import {RecipeConnected, RecipeUnwrapped} from './Recipe';
 import {findByTestAttribute, storeFactory} from '../../testUtils';
 
 test('renders without error', () => {
@@ -89,3 +89,36 @@ describe('gets all of the props', () => {
     expect(deleteRecipeProp).toBeInstanceOf(Function);
   });
 });
+
+describe('testing action creator calls', () => {
+  const deleteRecipeDataMock = jest.fn();
+  const fetchRecipeDataMock = jest.fn();
+  const props = {
+    deleteRecipeData: deleteRecipeDataMock,
+    fetchRecipeData: fetchRecipeDataMock,
+    match: {
+      params: {
+        recipeId: 'testId',
+      },
+    },
+    recipeData: {},
+    recipeIsLoading: true,
+    recipeError: '',
+  }
+  const wrapper = shallow(
+    <BrowserRouter>
+      <RecipeUnwrapped {...props} />
+    </BrowserRouter>
+  ).dive().dive().dive();
+
+  test('check if fetchRecipeData runs on Recipe mount', () => {
+    wrapper.instance().componentDidMount();
+    const fetchRecipeDataMockCallCount = fetchRecipeDataMock.mock.calls.length;
+
+    expect(fetchRecipeDataMockCallCount).toBe(1);
+  });
+
+  // test('check if deleteRecipeData runs on button click', () => {
+  //   console.warn(findByTestAttribute('recipe-button'))
+  // });
+})
