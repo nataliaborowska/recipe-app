@@ -35,7 +35,7 @@ interface IPropTypes extends PropsFromRedux, RouteComponentProps<IMatchParams> {
   firebase: IFirebase;
 }
 
-class Recipe extends React.Component<IPropTypes> {
+export class RecipeUnwrapped extends React.Component<IPropTypes> {
   componentDidMount() {
     this.props.fetchRecipeData(this.recipeId, this.props.firebase);
   }
@@ -59,7 +59,7 @@ class Recipe extends React.Component<IPropTypes> {
 
     if (this.props.recipeData) {
       return (
-        <div className={styles.recipeWrapper}>
+        <div className={styles.recipeWrapper} data-test="component-recipe">
           <RecipeLinks
             recipeId={this.recipeId}
             onDeleteClick={this.handleDeleteClick}
@@ -147,10 +147,16 @@ class Recipe extends React.Component<IPropTypes> {
       );
     }
 
-    return <Typography.Paragraph>There was a problem loading the data</Typography.Paragraph>;
+    return (
+      <div data-test="component-recipe">
+        <Typography.Paragraph>There was a problem loading the data</Typography.Paragraph>
+      </div>
+    );
   }
 }
 
-const WrappedComponent = connector(withAuthorization(withFirebase(withRouter(Recipe))));
+export const RecipeConnected = connector(RecipeUnwrapped);
+
+const WrappedComponent = withAuthorization(withFirebase(withRouter(RecipeConnected)));
 
 export {WrappedComponent as Recipe};
