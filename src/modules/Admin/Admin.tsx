@@ -81,6 +81,8 @@ export class AdminUnwrapped extends React.Component<IPropTypes> {
   }
 }
 
-const WrappedComponent = connector(withAuthorization(withFirebase(AdminUnwrapped)));
+export const AdminConnected = connector(AdminUnwrapped);
+
+const WrappedComponent = withAuthorization(withFirebase(connector(AdminUnwrapped)));
 
 export {WrappedComponent as Admin};

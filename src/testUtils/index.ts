@@ -1,4 +1,5 @@
-import {createStore} from 'redux'
+import {createStore, applyMiddleware} from 'redux';
+import thunk from 'redux-thunk';
 
 import {rootReducer, IStoreState} from '../store/store';
 
@@ -7,5 +8,7 @@ export function findByTestAttribute(wrapper: any, dataTestAttribute: string) {
 }
 
 export function storeFactory(initialState: IStoreState) {
-  return createStore(rootReducer, initialState);
+  const createdStore = createStore(rootReducer, initialState, applyMiddleware(thunk));
+
+  return createdStore;
 }

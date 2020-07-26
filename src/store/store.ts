@@ -14,7 +14,7 @@ export const rootReducer = combineReducers({
 });
 
 
-const store = createStore(rootReducer, applyMiddleware(thunk));
+const store = createStore(rootReducer, {}, applyMiddleware(thunk));
 
 export type RootStore = ReturnType<typeof rootReducer>;
 
