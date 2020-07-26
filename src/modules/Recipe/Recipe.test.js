@@ -24,16 +24,20 @@ test('renders without error', () => {
 });
 
 describe('gets all of the props', () => {
-  const setup = (initialState = {}) => {
-    const store = storeFactory(initialState);
-    const wrapper = shallow(
-      <BrowserRouter>
-        <RecipeConnected store={store} />
-      </BrowserRouter>
-    ).dive().dive().dive().dive();
+  let setup;
 
-    return wrapper;
-  }
+  beforeEach(() => {
+    setup = (initialState = {}) => {
+      const store = storeFactory(initialState);
+      const wrapper = shallow(
+        <BrowserRouter>
+          <RecipeConnected store={store} />
+        </BrowserRouter>
+      ).dive().dive().dive().dive();
+
+      return wrapper;
+    }
+  });
 
   test('receives the recipeData piece of state', () => {
     const recipe = {
@@ -52,7 +56,7 @@ describe('gets all of the props', () => {
     const wrapper = setup({recipe});
     const recipeProp = wrapper.prop('recipeData');
 
-    expect(recipeProp).toBe(recipe.recipeData);
+    expect(recipeProp).toEqual(recipe.recipeData);
   });
 
   test('receives the recipeIsLoading piece of state', () => {
@@ -60,9 +64,10 @@ describe('gets all of the props', () => {
       recipeIsLoading: true,
     }
     const wrapper = setup({recipe});
+
     const recipeIsLoadingProp = wrapper.prop('recipeIsLoading');
 
-    expect(recipeIsLoadingProp).toBe(recipe.recipeIsLoading);
+    expect(recipeIsLoadingProp).toEqual(recipe.recipeIsLoading);
   });
 
   test('receives the recipeError piece of state', () => {
@@ -72,7 +77,7 @@ describe('gets all of the props', () => {
     const wrapper = setup({recipe});
     const recipeErrorProp = wrapper.prop('recipeError');
 
-    expect(recipeErrorProp).toBe(recipe.recipeError);
+    expect(recipeErrorProp).toEqual(recipe.recipeError);
   });
 
   test('fetchRecipeData is an action creator passed to Recipe as prop', () => {
@@ -91,10 +96,8 @@ describe('gets all of the props', () => {
 });
 
 describe('testing action creator calls', () => {
-  const deleteRecipeDataMock = jest.fn();
   const fetchRecipeDataMock = jest.fn();
   const props = {
-    deleteRecipeData: deleteRecipeDataMock,
     fetchRecipeData: fetchRecipeDataMock,
     match: {
       params: {
@@ -117,8 +120,4 @@ describe('testing action creator calls', () => {
 
     expect(fetchRecipeDataMockCallCount).toBe(1);
   });
-
-  // test('check if deleteRecipeData runs on button click', () => {
-  //   console.warn(findByTestAttribute('recipe-button'))
-  // });
-})
+});

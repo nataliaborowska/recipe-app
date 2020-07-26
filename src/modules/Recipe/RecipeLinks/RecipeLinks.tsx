@@ -13,7 +13,7 @@ interface IPropTypes {
 }
 
 export const RecipeLinks: React.SFC<IPropTypes> = (props) => (
-  <div className={styles.recipeLinks}>
+  <div className={styles.recipeLinks} data-test="component-recipe-links">
     <Link
       className={styles.recipeLiksAction}
       to={`${AppRoutesEnum.EDIT_RECIPE}/${props.recipeId}`}
@@ -23,6 +23,7 @@ export const RecipeLinks: React.SFC<IPropTypes> = (props) => (
 
     <Button
       className={styles.recipeLinksAction}
+      data-test="recipe-links-button"
       onClick={props.onDeleteClick}
       style={{padding: 0}}
       type="link"

@@ -59,7 +59,7 @@ interface IState {
   isErrorModalVisible: boolean;
 }
 
-class EditRecipe extends React.Component<IPropTypes, IState> {
+export class EditRecipeUnwrapped extends React.Component<IPropTypes, IState> {
   private recipeId: string;
   constructor(props: IPropTypes) {
     super(props);
@@ -72,7 +72,6 @@ class EditRecipe extends React.Component<IPropTypes, IState> {
     const {recipeId} = this.props.match.params;
     this.recipeId = recipeId;
   }
-
 
   componentDidMount() {
     this.props.fetchRecipeData(this.recipeId, this.props.firebase);
@@ -119,7 +118,7 @@ class EditRecipe extends React.Component<IPropTypes, IState> {
 
   render() {
     return (
-      <div className={modules.editRecipe}>
+      <div className={modules.editRecipe} data-test="component-edit-recipe">
         <RecipeLinks
           recipeId={this.recipeId}
           onDeleteClick={this.handleDeleteClick}
@@ -157,6 +156,8 @@ class EditRecipe extends React.Component<IPropTypes, IState> {
   }
 }
 
-const WrappedComponent = connector(withRouter(withFirebase(withAuthorization(EditRecipe))));
+export const EditRecipeConnected = connector(EditRecipeUnwrapped);
+
+const WrappedComponent = withRouter(withFirebase(withAuthorization(EditRecipeConnected)));
 
 export {WrappedComponent as EditRecipe};
