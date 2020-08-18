@@ -40,8 +40,10 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}
+      data-test="component-edit-recipe-form"
     >
       <Form.Item
+        data-test="edit-recipe-name"
         label="Name"
         name="name"
         rules={[{required: true}]}
@@ -50,6 +52,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="edit-recipe-description"
         label="Description"
         name="description"
         rules={[{required: true}]}
@@ -58,6 +61,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="edit-recipe-servings"
         label="Servings"
         name="servings"
         rules={[{
@@ -70,6 +74,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="edit-recipe-calories"
         label="Calories"
         name="calories"
         rules={[{
@@ -82,6 +87,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="edit-recipe-prep-time"
         label="Preparation time (minutes)"
         name="preparationTime"
         rules={[{
@@ -94,6 +100,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="edit-recipe-cuisine-type"
         label="Cuisine type"
         name="cuisineType"
         rules={[{required: true}]}
@@ -113,7 +120,10 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
         </Select>
       </Form.Item>
 
-      <Form.List name="ingredients">
+      <Form.List
+        data-test="edit-recipe-ingredients"
+        name="ingredients"
+      >
         {
           (fields, {add, remove}) => (
             <div>
@@ -166,7 +176,10 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
         }
       </Form.List>
 
-      <Form.List name="instructions">
+      <Form.List
+        data-test="edit-recipe-instructions"
+        name="instructions"
+      >
         {
           (fields, {add, remove}) => (
             <div>
@@ -179,6 +192,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
                 >
                   <Form.Item
                     {...field}
+                    data-test="edit-recipe-step"
                     validateTrigger={['onChange', 'onBlur']}
                     rules={[
                       {
@@ -224,6 +238,7 @@ export const EditRecipeForm: React.FC<IPropTypes> = (props) => {
           disabled={!props.isFormValid}
           type="primary"
           htmlType="submit"
+          data-test="edit-recipe-submit-button"
         >
           Edit the recipe
         </Button>
