@@ -48,7 +48,7 @@ interface IState {
   isErrorModalVisible: boolean;
 }
 
-class CreateRecipe extends React.Component<IPropTypes, IState> {
+export class CreateRecipeUnwrapped extends React.Component<IPropTypes, IState> {
   state = {
     isFormValid: false,
     isErrorModalVisible: false,
@@ -90,7 +90,10 @@ class CreateRecipe extends React.Component<IPropTypes, IState> {
 
   render() {
     return (
-      <div className={modules.createRecipe}>
+      <div
+        className={modules.createRecipe}
+        data-test="component-create-recipe"
+      >
         <Typography.Title>Create a new recipe</Typography.Title>
 
         <CreateRecipeForm
@@ -120,6 +123,8 @@ class CreateRecipe extends React.Component<IPropTypes, IState> {
   }
 }
 
-const WrappedComponent = connector(withRouter(withFirebase(withAuthorization(CreateRecipe))));
+export const CreateRecipeConnected = connector(CreateRecipeUnwrapped);
+
+const WrappedComponent = withRouter(withFirebase(withAuthorization(CreateRecipeConnected)));
 
 export {WrappedComponent as CreateRecipe};
