@@ -30,12 +30,14 @@ export const ChangePasswordForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
+      data-test="component-change-password-form"
       name="change-password"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}
     >
       <Form.Item
+        data-test="change-password-new"
         label="New password"
         name="passwordNew"
         rules={[{required: true}]}
@@ -45,6 +47,7 @@ export const ChangePasswordForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="change-password-confirm"
         dependencies={['passwordNew']}
         label="Confirm new password"
         name="confirm"
@@ -67,6 +70,7 @@ export const ChangePasswordForm: React.FC<IPropTypes> = (props) => {
 
       <Form.Item {...tailLayout}>
         <Button
+          data-test="change-password-submit"
           disabled={!props.isFormValid}
           type="primary"
           htmlType="submit"
