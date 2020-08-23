@@ -44,7 +44,7 @@ interface IState {
   isFormValid: boolean;
 }
 
-class ChangePassword extends React.Component<IPropTypes, IState> {
+export class ChangePasswordUnwrapped extends React.Component<IPropTypes, IState> {
   state = {
     isErrorModalVisible: false,
     isFormValid: false,
@@ -85,7 +85,10 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
 
   render() {
     return (
-      <div className={modules.resetPassword}>
+      <div
+        className={modules.resetPassword}
+        data-test="component-change-password"
+      >
         <Typography.Title>Reset password</Typography.Title>
 
         <ChangePasswordForm
@@ -115,7 +118,9 @@ class ChangePassword extends React.Component<IPropTypes, IState> {
   }
 }
 
-const WrappedComponent = connector(withRouter(withFirebase(ChangePassword)));
+export const ChangePasswordConnected = connector(ChangePasswordUnwrapped);
+
+const WrappedComponent = withRouter(withFirebase(ChangePasswordConnected));
 
 export {WrappedComponent as ChangePassword};
 

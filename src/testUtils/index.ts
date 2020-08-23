@@ -1,3 +1,4 @@
+import {act} from 'react-dom/test-utils';
 import {createStore, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 
@@ -19,7 +20,7 @@ export const timeout = (timeout = 0) => {
   });
 };
 
-export async function changeInputValue(wrapper, inputDataTest, value) {
+export async function changeInputValue(wrapper: any, inputDataTest: string, value: string) {
   const inputElement = findByTestAttribute(wrapper, inputDataTest);
 
   inputElement.find('input').simulate('change', {target: {value}});
@@ -30,13 +31,13 @@ export async function changeInputValue(wrapper, inputDataTest, value) {
   wrapper.update();
 }
 
-export async function changeSelectValue(wrapper, selectDataTest, value) {
+export async function changeSelectValue(wrapper: any, selectDataTest: string, value: string) {
   const selectElement = findByTestAttribute(wrapper, selectDataTest);
 
   // can't manage to simulate a select click and value change
   selectElement.find('.ant-select').simulate('mouseDown');
 
-  document.getElementsByClassName('.ant-select-item-option')[1].simulate('mouseDown');
+  // document.getElementsByClassName('.ant-select-item-option')[1].simulate('mouseDown');
 
   //selectElement.find('.ant-select-selection__rendered').simulate('click');
   //selectElement.find('.ant-select-dropdown-menu li').at(2).simulate('mouseDown');

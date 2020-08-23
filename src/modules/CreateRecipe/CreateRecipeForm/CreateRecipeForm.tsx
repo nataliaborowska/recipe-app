@@ -34,12 +34,14 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
+      data-test="component-create-recipe-form"
       name="create-recipe"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}
     >
       <Form.Item
+        data-test="create-recipe-name"
         label="Name"
         name="name"
         rules={[{required: true}]}
@@ -48,6 +50,7 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="create-recipe-description"
         label="Description"
         name="description"
         rules={[{required: true}]}
@@ -56,6 +59,7 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="create-recipe-servings"
         label="Servings"
         name="servings"
         rules={[{
@@ -68,6 +72,7 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="create-recipe-calories"
         label="Calories"
         name="calories"
         rules={[{
@@ -80,6 +85,7 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
+        data-test="create-recipe-prep-time"
         label="Preparation time (minutes)"
         name="preparationTime"
         rules={[{
@@ -92,7 +98,8 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
       </Form.Item>
 
       <Form.Item
-        label="Cuisine   type"
+        data-test="create-recipe-cuisine-type"
+        label="Cuisine type"
         name="cuisineType"
         rules={[{required: true}]}
       >
@@ -111,7 +118,10 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
         </Select>
       </Form.Item>
 
-      <Form.List name="ingredients">
+      <Form.List
+        data-test="create-recipe-ingredients"
+        name="ingredients"
+      >
         {
           (fields, {add, remove}) => (
             <div>
@@ -164,7 +174,10 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
         }
       </Form.List>
 
-      <Form.List name="instructions">
+      <Form.List
+        data-test="create-recipe-instructions"
+        name="instructions"
+      >
         {
           (fields, {add, remove}) => (
             <div>
@@ -219,6 +232,7 @@ export const CreateRecipeForm: React.FC<IPropTypes> = (props) => {
 
       <Form.Item {...tailLayout}>
         <Button
+          data-test="create-recipe-submit-button"
           disabled={!props.isFormValid}
           type="primary"
           htmlType="submit"
