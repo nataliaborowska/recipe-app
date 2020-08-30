@@ -45,7 +45,7 @@ interface IState {
   selectedRecipes: Array<string>;
 }
 
-class Recipes extends React.Component<IPropTypes, IState> {
+export class RecipesUnwrapped extends React.Component<IPropTypes, IState> {
   state = {
     selectedCuisine: [],
     selectedIngredients: [],
@@ -88,7 +88,7 @@ class Recipes extends React.Component<IPropTypes, IState> {
     }
 
     return (
-      <div>
+      <div data-test="component-recipes">
         <Typography.Title>Recipes List</Typography.Title>
 
         <RecipeFilters
@@ -100,7 +100,7 @@ class Recipes extends React.Component<IPropTypes, IState> {
           onIngredientsSearch={this.onIngredientsSearch}
         />
 
-        {this.props.filteredRecipes.length > 0 ?
+        {this.props.filteredRecipes ?
           <Row gutter={16}>
             {this.props.filteredRecipes.map((recipe: any) => (
               <Col
@@ -119,6 +119,8 @@ class Recipes extends React.Component<IPropTypes, IState> {
   }
 }
 
-const WrappedComponent = connector(withAuthorization(withFirebase(Recipes)));
+export const RecipesConnected = connector(RecipesUnwrapped);
+
+const WrappedComponent = withAuthorization(withFirebase(RecipesConnected));
 
 export {WrappedComponent as Recipes};

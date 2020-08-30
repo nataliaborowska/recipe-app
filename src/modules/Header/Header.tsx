@@ -27,7 +27,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IPropTypes extends PropsFromRedux {}
 
-class Header extends React.Component<IPropTypes> {
+export class HeaderUnwrapped extends React.Component<IPropTypes> {
   onMenuButtonClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   }
@@ -56,7 +56,10 @@ class Header extends React.Component<IPropTypes> {
 
   render() {
     return (
-      <div className={modules.header}>
+      <div
+        className={modules.header}
+        data-test="component-header"
+      >
         <Link className={modules.logo} to="/">
           <img alt="recipe-app" className={modules.logoImage} src={Logo} />
 
@@ -79,6 +82,6 @@ class Header extends React.Component<IPropTypes> {
   }
 }
 
-const WrappedComponent = connector(Header);
+const WrappedComponent = connector(HeaderUnwrapped);
 
 export {WrappedComponent as Header}

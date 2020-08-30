@@ -10,12 +10,18 @@ interface IPropTypes {
   signOut: (firebase: IFirebase) => AppThunk<void>;
 }
 
-const SignOutButton: React.FC<IPropTypes> = (props) => {
-  return <Button onClick={() => {
-    props.signOut(props.firebase)
-  }}>SIGN OUT</Button>
+export const SignOutButtonUnwrapped: React.FC<IPropTypes> = (props) => {
+  return (
+    <Button
+      data-test="component-sign-out-button"
+      onClick={() => {
+        props.signOut(props.firebase)
+      }}>
+      SIGN OUT
+    </Button>
+  );
 }
 
-const WrappedComponent = withFirebase(SignOutButton);
+const WrappedComponent = withFirebase(SignOutButtonUnwrapped);
 
 export {WrappedComponent as SignOutButton};
