@@ -163,6 +163,13 @@ describe('component recives all of the requested props from redux store', () => 
 
     expect(setRecipeFiltersProp).toBeInstanceOf(Function);
   });
+
+  test('deleteRecipe is an action creator passed to Recipes', () => {
+    const wrapper = setup();
+    const deleteRecipeProp = wrapper.prop('deleteRecipe');
+
+    expect(deleteRecipeProp).toBeInstanceOf(Function);
+  });
 });
 
 describe('testing action creator calls', () => {

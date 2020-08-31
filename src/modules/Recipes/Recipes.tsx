@@ -5,7 +5,12 @@ import {v4 as uuidv4} from 'uuid';
 
 import {RecipeCard} from './components/RecipeCard';
 import {withAuthorization} from '../../common/withAuthorization';
-import {fetchRecipesList, removeRecipesList, setRecipeFilters} from '../../store/actions/recipeActions/recipe';
+import {
+  deleteRecipe,
+  fetchRecipesList,
+  removeRecipesList,
+  setRecipeFilters
+} from '../../store/actions/recipeActions/recipe';
 import {IStoreState} from '../../store/store';
 import {RecipeFilters} from './components/RecipeFilters';
 import {withFirebase, IFirebase} from '../../components/Firebase';
@@ -29,7 +34,7 @@ const mapStateToProps = (state: IStoreState) => {
   }
 }
 
-const mapDispatchToProps = {fetchRecipesList, removeRecipesList, setRecipeFilters};
+const mapDispatchToProps = {deleteRecipe, fetchRecipesList, removeRecipesList, setRecipeFilters};
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -107,7 +112,7 @@ export class RecipesUnwrapped extends React.Component<IPropTypes, IState> {
                 key={uuidv4()}
                 span={6}
               >
-                <RecipeCard {...recipe} />
+                <RecipeCard {...recipe} handleDeleteRecipe={this.props.deleteRecipe} />
               </Col>
             ))}
           </Row>

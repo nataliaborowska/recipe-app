@@ -1,30 +1,24 @@
 import React from 'react';
 import {Button, Card} from 'antd';
 import {ClockCircleOutlined, DeleteOutlined, EditOutlined, FireOutlined, EyeOutlined} from '@ant-design/icons';
-import {connect, ConnectedProps} from 'react-redux';
 import {Link} from 'react-router-dom';
 
 import {AppRoutesEnum} from '../../../../utils/AppRoutesEnum';
-import {deleteRecipe} from '../../../../store/actions/recipeActions/recipe';
 import {IFirebase, withFirebase} from '../../../../components/Firebase';
 import {IRecipeData} from '../../../../store/reducers/recipeReducer';
 
 import styles from './RecipeCard.module.scss';
 
-const mapDispatchToProps = {deleteRecipe}
 
-const connector = connect(null, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-interface IPropTypes extends IRecipeData, PropsFromRedux {
+interface IPropTypes extends IRecipeData {
   firebase: IFirebase;
+  handleDeleteRecipe: (recipeId: string, firebase: IFirebase) => void;
 }
 
-const RecipeCard: React.FC<IPropTypes> = (props) => {
+export const RecipeCardUnwrapped: React.FC<IPropTypes> = (props) => {
   const onDeleteClick = () => {
     if (props.recipeId) {
-      props.deleteRecipe(props.recipeId, props.firebase);
+      props.handleDeleteRecipe(props.recipeId, props.firebase);
     }
   }
 
@@ -32,6 +26,7 @@ const RecipeCard: React.FC<IPropTypes> = (props) => {
     <Card
       bodyStyle={{padding: '0'}}
       className={styles.recipeCard}
+      data-test="component-recipe-card"
       cover={<img alt="example" src="https://www.stevensegallery.com/640/360" />}
       hoverable
     >
@@ -52,6 +47,7 @@ const RecipeCard: React.FC<IPropTypes> = (props) => {
 
         <Button
           className={styles.recipeAction}
+          data-test="delete-button"
           onClick={onDeleteClick}
           style={{padding: 0}}
           type="link"
@@ -80,6 +76,6 @@ const RecipeCard: React.FC<IPropTypes> = (props) => {
   );
 }
 
-const WrappedComponent = withFirebase(connector(RecipeCard));
+const WrappedComponent = withFirebase(RecipeCardUnwrapped);
 
 export {WrappedComponent as RecipeCard};
