@@ -42,7 +42,7 @@ interface IState {
   isFormValid: boolean;
 }
 
-class ResetPassword extends React.Component<IPropTypes, IState> {
+export class ResetPasswordUnwrapped extends React.Component<IPropTypes, IState> {
   state = {
     isFormValid: false,
   }
@@ -80,7 +80,10 @@ class ResetPassword extends React.Component<IPropTypes, IState> {
 
   render() {
     return (
-      <div className={modules.resetPassword}>
+      <div
+        className={modules.resetPassword}
+        data-test="component-reset-password"
+      >
         <Typography.Title>Reset password</Typography.Title>
 
         <ResetPasswordForm
@@ -110,7 +113,9 @@ class ResetPassword extends React.Component<IPropTypes, IState> {
   }
 }
 
-const WrappedComponent = connector(withRouter(withFirebase(ResetPassword)));
+export const ResetPasswordConnected = connector(ResetPasswordUnwrapped);
+
+const WrappedComponent = withRouter(withFirebase(ResetPasswordConnected));
 
 export {WrappedComponent as ResetPassword};
 
