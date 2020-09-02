@@ -14,8 +14,12 @@ interface IPropTypes {
 }
 
 export const RecipeFilters: React.FC<IPropTypes> = (props) => (
-  <div className={styles.recipeFilters}>
+  <div
+    className={styles.recipeFilters}
+    data-test="component-recipe-filters"
+  >
     <Select
+      data-test="name-search"
       mode="multiple"
       showSearch
       style={{width: 200, paddingRight: 10}}
@@ -35,6 +39,7 @@ export const RecipeFilters: React.FC<IPropTypes> = (props) => (
     </Select>
 
     <Select
+      data-test="cuisine-search"
       showSearch
       style={{width: 200, paddingRight: 10}}
       placeholder="Select a cuisine"
@@ -53,6 +58,7 @@ export const RecipeFilters: React.FC<IPropTypes> = (props) => (
     </Select>
 
     <Select
+      data-test="ingredients-search"
       showSearch
       style={{width: 200, paddingRight: 10}}
       placeholder="Select ingredients"
