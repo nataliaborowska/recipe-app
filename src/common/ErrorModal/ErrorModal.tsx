@@ -16,6 +16,9 @@ export const ErrorModal: React.FC<IPropTypes> = (props) => (
     title={props.modalTitle}
     visible={props.isVisible}
   >
-    <p><WarningOutlined /> {props.message}</p>
+    <div data-test="component-error-modal">
+      <p><WarningOutlined /> {props.message}</p>
+    </div>
+
   </Modal>
 )

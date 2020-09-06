@@ -16,6 +16,8 @@ export const SuccessModal: React.FC<IPropTypes> = (props) => (
     title={props.modalTitle}
     visible={props.isVisible}
   >
-    <p><CheckOutlined /> {props.message}</p>
+    <div data-test="component-success-modal">
+      <p><CheckOutlined /> {props.message}</p>
+    </div>
   </Modal>
 )
