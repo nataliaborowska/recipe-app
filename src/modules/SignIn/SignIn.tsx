@@ -44,7 +44,7 @@ interface IState {
   signInError: boolean;
 }
 
-class SignIn extends React.Component<IPropTypes, IState> {
+export class SignInUnwrapped extends React.Component<IPropTypes, IState> {
   state = {
     isErrorModalVisible: false,
     isFormValid: false,
@@ -91,7 +91,10 @@ class SignIn extends React.Component<IPropTypes, IState> {
     }
 
     return (
-      <div className={modules.signIn}>
+      <div
+        className={modules.signIn}
+        data-test="component-sign-in"
+      >
         <Typography.Title>Sign In</Typography.Title>
 
         {this.props.authenticationIsLoading ?
@@ -122,7 +125,9 @@ class SignIn extends React.Component<IPropTypes, IState> {
   }
 }
 
-const WrappedComponent = connector(withFirebase(SignIn));
+export const SignInConnected = connector(SignInUnwrapped);
+
+const WrappedComponent = withFirebase(SignInConnected);
 
 export {WrappedComponent as SignIn};
 
