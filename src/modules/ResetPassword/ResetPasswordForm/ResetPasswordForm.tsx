@@ -30,12 +30,14 @@ export const ResetPasswordForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
+      data-test="component-reset-password-form"
       name="reset-password"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
       onFieldsChange={props.onFormFieldsChange}
     >
       <Form.Item
+        data-test="reset-password-email"
         label="Email"
         name="email"
         rules={[
@@ -52,6 +54,7 @@ export const ResetPasswordForm: React.FC<IPropTypes> = (props) => {
 
       <Form.Item {...tailLayout}>
         <Button
+          data-test="reset-password-submit"
           disabled={!props.isFormValid}
           type="primary"
           htmlType="submit"
