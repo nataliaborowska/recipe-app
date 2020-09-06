@@ -1,12 +1,12 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import {SignInConnected, SignInUnwrapped} from './SignIn';
+import {SignUpConnected, SignUpUnwrapped} from './SignUp';
 import {findByTestAttribute, storeFactory} from '../../testUtils';
 
 test('component renders without error', () => {
-  const wrapper = shallow(<SignInUnwrapped />);
-  const signInComponent = findByTestAttribute(wrapper, 'component-sign-in');
+  const wrapper = shallow(<SignUpUnwrapped />);
+  const signInComponent = findByTestAttribute(wrapper, 'component-sign-up');
 
   expect(signInComponent.length).toBe(1);
 });
@@ -18,7 +18,7 @@ describe('components get all of the props', () => {
     setup = (initialState = {}) => {
       const store = storeFactory(initialState);
 
-      return shallow(<SignInConnected store={store} />).dive();
+      return shallow(<SignUpConnected store={store} />).dive();
     }
   });
 
@@ -52,10 +52,10 @@ describe('components get all of the props', () => {
     expect(isAuthenticatedProp).toEqual(auth.isAuthenticated);
   });
 
-  test('signIn is an action creator passed to SignIn as props', () => {
+  test('signUp is an action creator passed to SignUp as props', () => {
     const wrapper = setup();
-    const signInProp = wrapper.prop('signIn');
+    const signUpProp = wrapper.prop('signUp');
 
-    expect(signInProp).toBeInstanceOf(Function);
+    expect(signUpProp).toBeInstanceOf(Function);
   });
 });
