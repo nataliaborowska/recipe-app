@@ -2,8 +2,6 @@ import React from 'react';
 import {Breadcrumb} from 'antd';
 import {Link, withRouter, RouteComponentProps} from 'react-router-dom';
 
-import {AppRoutesEnum} from '../../utils/AppRoutesEnum';
-
 interface IMatchParams {
   recipeId: string;
   userId: string;
@@ -41,17 +39,19 @@ class BreadCrumbWrapper extends React.Component<IPropTypes> {
 
   render() {
     return (
-      <Breadcrumb style={{paddingBottom: 20}}>
-        <Breadcrumb.Item key='home'>
-          <Link to="/">Home</Link>
-        </Breadcrumb.Item>
-
-        {this.urlPaths.map((urlPath: any) => (
-          <Breadcrumb.Item key={urlPath.name}>
-            <Link to={urlPath.link}>{urlPath.name}</Link>
+      <div data-test="component-breadcrumb-wrapper">
+        <Breadcrumb style={{paddingBottom: 20}}>
+          <Breadcrumb.Item key='home'>
+            <Link to="/">Home</Link>
           </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
+
+          {this.urlPaths.map((urlPath: any) => (
+            <Breadcrumb.Item key={urlPath.name}>
+              <Link to={urlPath.link}>{urlPath.name}</Link>
+            </Breadcrumb.Item>
+          ))}
+        </Breadcrumb>
+      </div>
     );
   }
 }

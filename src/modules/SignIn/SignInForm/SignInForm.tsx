@@ -30,6 +30,7 @@ export const SignInForm: React.FC<IPropTypes> = (props) => {
   return (
     <Form
       {...layout}
+      data-test="component-sign-in-form"
       name="sign-in"
       onFinish={props.onFormSubmit}
       onFinishFailed={props.onFormSubmitFailed}
