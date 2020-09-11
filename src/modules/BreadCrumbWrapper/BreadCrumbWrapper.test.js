@@ -12,7 +12,6 @@ test('renders without error', () => {
     </BrowserRouter>
   ).dive().dive().dive().dive().dive();
 
-  console.warn(wrapper.debug());
   const breadCrumbWrapperComponent = findByTestAttribute(wrapper, 'component-breadcrumb-wrapper');
 
   expect(breadCrumbWrapperComponent.length).toBe(1);
