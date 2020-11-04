@@ -19,7 +19,7 @@ describe('authReducer tests', () => {
   });
 
   test('authReducer returns initial state when no action is passed', () => {
-    const newState = authReducer(initialState);
+    const newState = authReducer(initialState, {});
 
     expect(newState).toEqual(initialState);
   });

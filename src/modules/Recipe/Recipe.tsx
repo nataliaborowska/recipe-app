@@ -54,7 +54,7 @@ export class RecipeUnwrapped extends React.Component<IPropTypes> {
 
   render() {
     if (this.props.recipeIsLoading) {
-      return <Spin />;
+      return <Spin data-test="recipe-spin" />;
     }
 
     if (this.props.recipeData) {

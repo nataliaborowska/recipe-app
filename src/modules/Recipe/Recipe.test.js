@@ -5,22 +5,55 @@ import {shallow} from 'enzyme';
 import {RecipeConnected, RecipeUnwrapped} from './Recipe';
 import {findByTestAttribute, storeFactory} from '../../testUtils';
 
-test('renders without error', () => {
-  const setup = (initialState = {}) => {
-    const store = storeFactory(initialState);
+
+describe('renders proper content depending on redux store passed in', () => {
+  test('renders recipe component if recipeIsLoading from redux store is true', () => {
+    const recipe = {
+      recipeIsLoading: true,
+    };
+    const store = storeFactory({recipe});
     const wrapper = shallow(
       <BrowserRouter>
-        <RecipeUnwrapped store={store} />
+        <RecipeConnected store={store} />
       </BrowserRouter>
-    ).dive().dive().dive();
+    ).dive().dive().dive().dive().dive();
+    const recipeSpinner = findByTestAttribute(wrapper, 'recipe-spin');
 
-    return wrapper;
-  }
+    expect(recipeSpinner.length).toBe(1);
+  });
 
-  const wrapper = setup();
-  const recipeComponent = findByTestAttribute(wrapper, 'component-recipe');
+  test('renders recipe component if recipeIsLoading from redux store is false and recipeData is not undefined', () => {
+    const recipe = {
+      recipeIsLoading: false,
+      recipeData: {
+        calories: 400,
+        cuisineType: ['italian'],
+        description: 'blah blah',
+        ingredients: ['pepper'],
+        instructions: ['do th', 'do sth else'],
+        name: 'some recipe name',
+        preparationTime: 30,
+        servings: 2,
+        recipeId: 'testId',
+      }
+    };
+    const store = storeFactory({recipe});
+    const props = {
+      match: {
+        params: {
+          recipeId: 'testId',
+        },
+      },
+    }
+    const wrapper = shallow(
+      <BrowserRouter>
+        <RecipeConnected store={store} {...props} />
+      </BrowserRouter>
+    ).dive().dive().dive().dive().dive();
+    const recipeComponent = findByTestAttribute(wrapper, 'component-recipe');
 
-  expect(recipeComponent.length).toBe(1);
+    expect(recipeComponent.length).toBe(1);
+  });
 });
 
 describe('gets all of the props', () => {

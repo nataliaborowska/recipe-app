@@ -5,10 +5,17 @@ import {SignUpConnected, SignUpUnwrapped} from './SignUp';
 import {findByTestAttribute, storeFactory} from '../../testUtils';
 
 test('component renders without error', () => {
-  const wrapper = shallow(<SignUpUnwrapped />);
-  const signInComponent = findByTestAttribute(wrapper, 'component-sign-up');
 
-  expect(signInComponent.length).toBe(1);
+  const auth = {
+    isAuthenticated: false,
+  }
+  const store = storeFactory({auth});
+
+  const wrapper = shallow(<SignUpConnected store={store} />).dive().dive();
+
+  const signUpComponent = findByTestAttribute(wrapper, 'component-sign-up');
+
+  expect(signUpComponent.length).toBe(1);
 });
 
 describe('components get all of the props', () => {

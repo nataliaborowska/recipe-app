@@ -1,11 +1,17 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 
-import {SignInConnected, SignInUnwrapped} from './SignIn';
+import {SignInConnected} from './SignIn';
 import {findByTestAttribute, storeFactory} from '../../testUtils';
 
-test('component renders without error', () => {
-  const wrapper = shallow(<SignInUnwrapped />);
+test('component SignIn renders if isAuthenticated from redux store is false', () => {
+  const auth = {
+    isAuthenticated: false,
+  }
+  const store = storeFactory({auth});
+
+  const wrapper = shallow(<SignInConnected store={store} />).dive().dive();
+
   const signInComponent = findByTestAttribute(wrapper, 'component-sign-in');
 
   expect(signInComponent.length).toBe(1);

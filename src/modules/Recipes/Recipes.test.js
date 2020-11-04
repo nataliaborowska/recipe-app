@@ -4,21 +4,58 @@ import {shallow} from 'enzyme';
 import {RecipesConnected, RecipesUnwrapped} from './Recipes';
 import {
   cuisineNamesSelector,
-  filterByCuisineSelector,
   filteredRecipesSelector,
-  filterByNameSelector,
-  filterByIngredientsSelector,
   ingredientListSelector,
   recipeNamesSelector,
-  recipesListSelector,
 } from '../../store/selectors';
 import {findByTestAttribute, storeFactory} from '../../testUtils';
 
-test('renders wothout error', () => {
-  const wrapper = shallow(<RecipesUnwrapped />);
+test('renders the recipes component if recipeIsLoading from redux store is false', () => {
+  const setup = (initialStore = {}) => {
+    const store = storeFactory(initialStore);
+    const wrapper = shallow(
+      <RecipesConnected store={store} />
+    ).dive().dive();
+
+    return wrapper;
+  }
+  const recipe = {
+    recipesList: [],
+    recipeIsLoading: false,
+    filterByCuisine: ['Italian'],
+    filterByIngredients: [],
+    filterByName: [],
+    recipeError: 'example error',
+  };
+
+  const wrapper = setup({recipe});
   const recipesComponent = findByTestAttribute(wrapper, 'component-recipes');
 
   expect(recipesComponent.length).toBe(1);
+});
+
+test('renders the recipes component if recipeIsLoading from redux store is true', () => {
+  const setup = (initialStore = {}) => {
+    const store = storeFactory(initialStore);
+    const wrapper = shallow(
+      <RecipesConnected store={store} />
+    ).dive().dive();
+
+    return wrapper;
+  }
+  const recipe = {
+    recipesList: [],
+    recipeIsLoading: true,
+    filterByCuisine: ['Italian'],
+    filterByIngredients: [],
+    filterByName: [],
+    recipeError: 'example error',
+  };
+
+  const wrapper = setup({recipe});
+  const recipesSpinner = findByTestAttribute(wrapper, 'recipes-spin');
+
+  expect(recipesSpinner.length).toBe(1);
 });
 
 describe('component recives all of the requested props from redux store', () => {

@@ -2,23 +2,9 @@ import {AuthActionTypesEnum} from './typesEnum';
 import {
   changePasswordEnd,
   changePasswordFail,
-  changePasswordStart,
-  changePasswordSuccess,
-  fetchUsersFail,
-  fetchUsersStart,
-  fetchUsersSuccess,
-  removeUsersListEnd,
   resetPasswordEnd,
   resetPasswordFail,
-  resetPasswordSuccess,
-  signInStart,
   signInSuccess,
-  signInFail,
-  signOutFail,
-  signOutSuccess,
-  signUpStart,
-  signUpSuccess,
-  signUpFail,
 } from './auth';
 
 describe('auth action creators', () => {
