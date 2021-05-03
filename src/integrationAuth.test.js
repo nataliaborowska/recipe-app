@@ -38,26 +38,27 @@ describe('changePassword action dispatcher', () => {
     store = storeFactory(initialState);
   });
 
-  // test('updates state correctly on changePassword', () => {
-  //   store.dispatch(changePassword('newPassword', firebase));
+  test('updates state correctly on changePassword', () => {
 
-  //   const newState = store.getState();
-  //   const expectedState = {
-  //     auth: {
-  //       authenticatedUser: null,
-  //       authError: null,
-  //       authIsLoading: false,
-  //       changePasswordSuccess: false,
-  //       fetchingUsers: false,
-  //       fetchUsersError: false,
-  //       isAuthenticated: false,
-  //       resetPasswordSuccess: false,
-  //       users: [],
-  //     },
-  //   }
+    store.dispatch(changePassword('newPassword', firebase));
 
-  //   console.warn(newState.auth);
-  // });
+    const newState = store.getState();
+    const expectedState = {
+      auth: {
+        authenticatedUser: null,
+        authError: null,
+        authIsLoading: false,
+        changePasswordSuccess: false,
+        fetchingUsers: false,
+        fetchUsersError: false,
+        isAuthenticated: false,
+        resetPasswordSuccess: false,
+        users: [],
+      },
+    }
+
+    console.warn(newState.auth);
+  });
 
   test('updates the state correctly on changePasswordEnd', () => {
     store.dispatch(changePasswordEnd());
@@ -75,7 +76,24 @@ describe('changePassword action dispatcher', () => {
       users: [],
     }
 
-    console.warn(newState);
+    expect(newState).toEqual(expectedState);
+  });
+
+  test('updates the state correctly on changePasswordFail', () => {
+    store.dispatch(changePasswordFail('some error string'));
+
+    const newState = store.getState().auth;
+    const expectedState = {
+      authenticatedUser: null,
+      authError: 'some error string',
+      authIsLoading: false,
+      changePasswordSuccess: false,
+      fetchingUsers: false,
+      fetchUsersError: false,
+      isAuthenticated: false,
+      resetPasswordSuccess: false,
+      users: [],
+    }
 
     expect(newState).toEqual(expectedState);
   });
